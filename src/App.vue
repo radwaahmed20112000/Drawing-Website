@@ -23,20 +23,24 @@
       </ul>
       </div>
     </div>
+   <Canvas></Canvas>
   </div>
 </template>
 
 <script>
+import Canvas from "@/components/Canvas";
 export default {
   name: 'App',
   components: {
-  },
+    Canvas
+  }
+  ,
   mounted() {
     //NAVIGATION BAR SETTINGS : 
-    var saveDrawing = document.getElementById("saveDrawing");
-    var saveList = document.getElementById("saveList");
-    var edit = document.getElementById("edit");
-    var editList = document.getElementById("editList");
+    const saveDrawing = document.getElementById("saveDrawing");
+    const saveList = document.getElementById("saveList");
+    const edit = document.getElementById("edit");
+    const editList = document.getElementById("editList");
     saveDrawing.addEventListener('mouseover', () =>{
       saveList.style.display = "block";
     });
@@ -50,6 +54,7 @@ export default {
       editList.style.display = "none";
     });
     //End Navigation Bar
+
   }
 }
 </script>
@@ -75,7 +80,6 @@ export default {
 #toolBar {
   text-align: left;
   background-color: black;
-  color: black;
   font-weight: 600;
   font-size: 15px;
   padding: 12px;
@@ -99,7 +103,7 @@ export default {
 #appLogo h1{
   font-family: 'Jasmina FY';
   display: inline-block;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   margin-top: 10px;
   font-size: 40px;
 }
@@ -134,4 +138,5 @@ export default {
   background-color: #DE3163;
 }
 /*END NAVIGATION BAR STYLING*/
+
 </style>
