@@ -24,12 +24,15 @@
       </div>
     </div>
     <div class="shape"></div>
+    <toolsBar />
    <Canvas></Canvas>
+    
   </div>
 </template>
 
 <script>
 import Canvas from "@/components/Canvas";
+import toolsBar from './components/toolsBar.vue'
 export default {
   name: 'App',
   components: {
