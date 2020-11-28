@@ -23,6 +23,7 @@
       </ul>
       </div>
     </div>
+    <div class="shape"></div>
    <Canvas></Canvas>
   </div>
 </template>
