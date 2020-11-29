@@ -25,7 +25,9 @@
     </div>
   <shape-bar></shape-bar>
   <line-bar></line-bar>
+
    <Canvas></Canvas>
+    <tools-bar></tools-bar>
   </div>
 </template>
 
@@ -33,12 +35,15 @@
 import Canvas from "@/components/Canvas";
 import ShapeBar from './components/ShapeBar.vue';
 import LineBar from './components/LineBar.vue';
+
+import ToolsBar from './components/toolsBar.vue';
 export default {
   name: 'App',
   components: {
     Canvas,
     ShapeBar,
-    LineBar
+    LineBar,
+    ToolsBar
   }
   ,
  
