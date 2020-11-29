@@ -10,7 +10,8 @@ let imageData = null;
 let X = 0;
 let Y = 0;
 export default {
-name: "Canvas",data(){
+name: "Canvas",
+data(){
   return{
     canvas :null,
     context : null
@@ -26,12 +27,12 @@ name: "Canvas",data(){
     // this.canvas.addEventListener("mousedown",this.startSketch)
     // this.canvas.addEventListener("mouseup",this.finishSketch)
     // this.canvas.addEventListener("mousemove",this.sketch)
-    // this.canvas.addEventListener("mousedown",this.startRect)
-    // this.canvas.addEventListener("mouseup",this.finishRect)
-    // this.canvas.addEventListener("mousemove",this.drawRect)
-    this.canvas.addEventListener("mousedown",this.startCircle)
-    this.canvas.addEventListener("mouseup",this.finishCircle)
-    this.canvas.addEventListener("mousemove",this.drawCircle)
+     this.canvas.addEventListener("mousedown",this.startRect)
+     this.canvas.addEventListener("mouseup",this.finishRect)
+     this.canvas.addEventListener("mousemove",this.drawRect)
+   // this.canvas.addEventListener("mousedown",this.startCircle)
+    //this.canvas.addEventListener("mouseup",this.finishCircle)
+    //this.canvas.addEventListener("mousemove",this.drawCircle)
   },
   methods:{
   resizeCanvas :function() {
@@ -110,6 +111,7 @@ name: "Canvas",data(){
 
 <style scoped>
 #Canvas{
+  position: absolute;
   padding: 0;
   margin: 0;
   border: darkgrey 2px solid

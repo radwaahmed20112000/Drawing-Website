@@ -24,19 +24,21 @@
       </div>
     </div>
     <div class="shape"></div>
-    <toolsBar />
+   
    <Canvas></Canvas>
+    <toolsBar />
     
   </div>
 </template>
 
 <script>
 import Canvas from "@/components/Canvas";
-import toolsBar from './components/toolsBar.vue'
+import toolsBar from '@/components/toolsBar.vue'
 export default {
   name: 'App',
   components: {
-    Canvas
+    Canvas,
+    toolsBar
   }
   ,
   mounted() {
@@ -82,6 +84,7 @@ export default {
 }
 /*NAVIGATION BAR STYLING*/
 #toolBar {
+  
   text-align: left;
   background-color: black;
   font-weight: 600;
@@ -93,6 +96,7 @@ export default {
   color: white;
   height: 50%;
 }
+
 #toolBar div{
   display: inline-block;
   margin-right: 35px;
