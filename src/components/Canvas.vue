@@ -15,7 +15,8 @@ name: "Canvas",data(){
     canvas :null,
     context : null
   }
-  }, mounted() {
+  },
+  mounted() {
     this.canvas = document.getElementById("Canvas")
     this.context = this.canvas.getContext("2d")
 
@@ -23,13 +24,16 @@ name: "Canvas",data(){
     window.addEventListener('resize',() => {
       this.resizeCanvas()
     })
-    // this.canvas.addEventListener("mousedown",this.startShape)
-     this.canvas.addEventListener("mousedown",this.startSketch)
-     this.canvas.addEventListener("mousemove",this.sketch)
+    this.setShapeAttributes("red","blue",7);
+     this.canvas.addEventListener("mousedown",this.startShape)
+    //  this.canvas.addEventListener("mousedown",this.startSketch)
+    //  this.canvas.addEventListener("mousemove",this.sketch)
     // this.canvas.addEventListener("mousemove",this.drawRect)
     // this.canvas.addEventListener("mousemove",this.drawCircle)
     // this.canvas.addEventListener("mousemove",this.drawTriangle)
+    this.canvas.addEventListener("mousemove",this.drawEllipse)
     this.canvas.addEventListener("mouseup",this.finishShape)
+
   },
   methods:{
 /* General Canvas Methods */
@@ -49,6 +53,11 @@ name: "Canvas",data(){
   finishShape(){
     drawing = false
     this.context.beginPath()
+  },
+  setShapeAttributes(lineColor,fillColor,lineOpacity){
+    this.context.lineWidth = lineOpacity;
+    this.context.fillStyle = fillColor;
+    this.context.strokeStyle = lineColor;
   },
 /* Set Coordinates */ 
   setStartCoordinates : function (e){
@@ -111,8 +120,21 @@ name: "Canvas",data(){
     this.context.beginPath();
   },
 /* Ellipse Drawing Method */
-  drawEllipse(){
-
+  drawEllipse(e){
+    if(!drawing){
+      return
+    }
+    this.setEndCoordinates(e);
+    var radiusX = Math.abs(X-startX)/2,
+        radiusY = Math.abs(Y-startY)/2,
+        centreX = Math.abs(X-radiusX),
+        centreY = Math.abs(Y-radiusY);
+    this.context.putImageData(imageData,0,0);
+    console.log(X,Y,centreX,centreY,radiusX,radiusY);
+    this.context.ellipse(centreX,centreY,radiusX,radiusY,Math.PI , 0 ,2 * Math.PI);
+    this.context.stroke();
+    this.context.fill();
+    this.context.beginPath();
   }
 }
 }
