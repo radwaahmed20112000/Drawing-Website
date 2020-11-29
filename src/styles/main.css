@@ -11,6 +11,7 @@
 }
 .label_bar{
   margin: 0px;
+    margin-top:3.8px ;
   font-size: 15px;
   font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
@@ -28,4 +29,5 @@
     width: 25px;
     height: 25x;
     margin: 2px;
+    outline: none;
 }

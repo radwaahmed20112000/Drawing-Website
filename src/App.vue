@@ -23,20 +23,26 @@
       </ul>
       </div>
     </div>
-    <div class="shape"></div>
+  <shape-bar></shape-bar>
+  <line-bar></line-bar>
    <Canvas></Canvas>
   </div>
 </template>
 
 <script>
 import Canvas from "@/components/Canvas";
+import ShapeBar from './components/ShapeBar.vue';
+import LineBar from './components/LineBar.vue';
 export default {
   name: 'App',
   components: {
-    Canvas
+    Canvas,
+    ShapeBar,
+    LineBar
   }
   ,
-  mounted() {
+ 
+   mounted() {
     //NAVIGATION BAR SETTINGS : 
     const saveDrawing = document.getElementById("saveDrawing");
     const saveList = document.getElementById("saveList");
