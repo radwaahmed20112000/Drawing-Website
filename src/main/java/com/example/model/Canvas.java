@@ -1,30 +1,28 @@
-package com.example.controller;
+package com.example.model;
 
-import com.example.model.IShape;
-import com.example.model.ShapeFactory;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class DrawingApp {
+public class Canvas {
     private ShapeFactory factory;
     private HashMap<Long, IShape> shapes;
     private HashMap<String, IShape> operationsList;
     private IShape currentShape;
-    private static DrawingApp drawingApp;
+    private static Canvas canvas;
     private long currentID = 0;
-    private DrawingApp(){
+    private Canvas(){
         shapes = new HashMap<Long, IShape>();
         factory = new ShapeFactory();
     }
 
-    public static DrawingApp getInstance(){
-        if(drawingApp == null){
-            drawingApp = new DrawingApp();
+    public static Canvas getInstance(){
+        if(canvas == null){
+            canvas = new Canvas();
         }
-        return drawingApp;
+        return canvas;
     }
 
     /*

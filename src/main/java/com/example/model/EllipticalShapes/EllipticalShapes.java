@@ -1,4 +1,6 @@
-package com.example.model;
+package com.example.model.EllipticalShapes;
+
+import com.example.model.IShape;
 
 import java.util.HashMap;
 

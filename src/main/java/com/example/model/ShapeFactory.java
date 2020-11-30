@@ -1,4 +1,7 @@
 package com.example.model;
+import com.example.model.EllipticalShapes.*;
+import com.example.model.Polygons.*;
+
 import java.util.HashMap;
 
 public class ShapeFactory {

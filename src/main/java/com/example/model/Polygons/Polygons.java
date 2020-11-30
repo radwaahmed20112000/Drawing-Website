@@ -1,8 +1,10 @@
-package com.example.model;
+package com.example.model.Polygons;
+
+import com.example.model.IShape;
 
 import java.util.HashMap;
 
-public class Polygons implements IShape{
+public class Polygons implements IShape {
     HashMap<String, String> properties;
     public String id;
 
