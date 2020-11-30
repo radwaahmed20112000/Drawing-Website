@@ -1,9 +1,16 @@
 <template>
+  <div>
+    
   <canvas id="Canvas" ></canvas>
+  <toolsBar @setShape="setShape" />
+  
+  </div>
 </template>
 
 <script>
+import toolsBar from '@/components/toolsBar.vue'
 let drawing = false;
+
 let startX = 0;
 let startY = 0;
 let imageData = null;
@@ -11,12 +18,21 @@ let X = 0;
 let Y = 0;
 export default {
 name: "Canvas",
+components: {
+   toolsBar
+    
+    },
+props:['shapedrawing']
+  ,
 data(){
   return{
     canvas :null,
-    context : null
+    context : null,
+    selectedshape:'hii'
+    
   }
-  }, mounted() {
+  },
+  mounted() {
     this.canvas = document.getElementById("Canvas")
     this.context = this.canvas.getContext("2d")
 
@@ -24,17 +40,37 @@ data(){
     window.addEventListener('resize',() => {
       this.resizeCanvas()
     })
-    // this.canvas.addEventListener("mousedown",this.startSketch)
-    // this.canvas.addEventListener("mouseup",this.finishSketch)
-    // this.canvas.addEventListener("mousemove",this.sketch)
-     this.canvas.addEventListener("mousedown",this.startShape)
+
+       this.canvas.addEventListener("mousedown",this.startShape)
      this.canvas.addEventListener("mouseup",this.finishShape)
-     this.canvas.addEventListener("mousemove",this.drawpentagon)
-   // this.canvas.addEventListener("mousedown",this.startCircle)
-    //this.canvas.addEventListener("mouseup",this.finishCircle)
-    //this.canvas.addEventListener("mousemove",this.drawCircle)
+     this.canvas.addEventListener("mousemove",this.selectShape)
+    
   },
   methods:{
+    selectShape(e){
+        if(this.selectedshape=="circle")
+      this.drawCircle(e);
+      else if(this.selectedshape=="pentagon")
+      this.drawpentagon(e);
+      else if(this.selectedshape=="rectangle")
+      this.drawRect(e);
+      else if(this.selectedshape=="triangle")
+      this.drawTriangle(e);
+      else if(this.selectedshape=="hexagon")
+      this.drawRect(e);
+      else if(this.selectedshape=="line")
+      this.drawline(e);
+      else if(this.selectedshape=="eclipse")
+      this.drawEllipse(e);
+
+    },
+     setShape(value){
+      
+      this.selectedshape=value;
+      console.log(this.selectedshape)
+      
+    },
+
 /* General Canvas Methods */
   resizeCanvas :function() {
     const toolBarHeight = document.getElementById("toolBar").offsetHeight
@@ -52,6 +88,11 @@ data(){
   finishShape(){
     drawing = false
     this.context.beginPath()
+  },
+  setShapeAttributes(lineColor,fillColor,lineOpacity){
+    this.context.lineWidth = lineOpacity;
+    this.context.fillStyle = fillColor;
+    this.context.strokeStyle = lineColor;
   },
 /* Set Coordinates */ 
   setStartCoordinates : function (e){
@@ -85,6 +126,7 @@ data(){
     let height = Y-startY
     this.context.putImageData(imageData,0,0)
     this.context.strokeRect(startX,startY,width,height)
+    this.context.fill();
 
   },
 /* Circles Drawing Method*/
@@ -96,6 +138,7 @@ data(){
     let radius = Math.sqrt(Math.pow((X - startX), 2) - Math.pow((Y - startY), 2))
     this.context.beginPath()
     this.context.arc(startX, startY, radius,0,2*Math.PI)
+    this.context.fill();
     this.context.stroke()
   },
 /* Triangle Drawing Method*/ 
@@ -111,6 +154,7 @@ data(){
     this.context.lineTo((X-base),Y);
     this.context.lineTo(startX,startY);
     this.context.stroke();
+    this.context.fill();
     this.context.beginPath();
   },
 /* Ellipse Drawing Method */
@@ -138,6 +182,7 @@ data(){
       this.context.lineTo(X+radius*Math.cos(curStep),Y+radius*Math.sin(curStep));
     }
     this.context.stroke();
+    this.context.fill();
     this.context.beginPath(); 
 
   }

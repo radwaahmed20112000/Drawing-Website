@@ -25,22 +25,27 @@
     </div>
     <div class="shape"></div>
    
-   <Canvas></Canvas>
-    <toolsBar />
+   <Canvas :shapedrawing="selectedshape" ></Canvas>
+    
     
   </div>
 </template>
 
 <script>
-import Canvas from "@/components/Canvas";
-import toolsBar from '@/components/toolsBar.vue'
+
+import Canvas from "@/components/Canvas.vue";
+
 export default {
   name: 'App',
   components: {
-    Canvas,
-    toolsBar
+    Canvas
+  },
+  data(){
+  return{
+   selectedshape:'pentagon'
+    
   }
-  ,
+  },
   mounted() {
     //NAVIGATION BAR SETTINGS : 
     const saveDrawing = document.getElementById("saveDrawing");
@@ -61,6 +66,10 @@ export default {
     });
     //End Navigation Bar
 
+  },
+
+  methods:{
+   
   }
 }
 </script>
