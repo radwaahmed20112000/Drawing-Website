@@ -2,12 +2,22 @@ package com.example.model;
 
 import java.util.HashMap;
 
-public class Polygons implements Shape{
+public class Polygons implements IShape{
     HashMap<String, String> properties;
     public String id;
 
     @Override
+    public void setId(long id) {
+
+    }
+
+    @Override
     public void setProperties(HashMap<String, String> properties) {
+
+    }
+
+    @Override
+    public void setDimensions(HashMap<String, String> dimensions) {
 
     }
 

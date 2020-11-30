@@ -2,11 +2,19 @@ package com.example.model;
 
 import java.util.HashMap;
 
-public class EllipticalShapes implements Shape {
-    HashMap<String, String> properties;
-    public String id;
+public class EllipticalShapes implements IShape {
+    @Override
+    public void setId(long id) {
+
+    }
+
     @Override
     public void setProperties(HashMap<String, String> properties) {
+
+    }
+
+    @Override
+    public void setDimensions(HashMap<String, String> dimensions) {
 
     }
 
