@@ -26,12 +26,12 @@ name: "Canvas",data(){
     // this.canvas.addEventListener("mousedown",this.startSketch)
     // this.canvas.addEventListener("mouseup",this.finishSketch)
     // this.canvas.addEventListener("mousemove",this.sketch)
-    // this.canvas.addEventListener("mousedown",this.startRect)
-    // this.canvas.addEventListener("mouseup",this.finishRect)
-    // this.canvas.addEventListener("mousemove",this.drawRect)
-    this.canvas.addEventListener("mousedown",this.startCircle)
-    this.canvas.addEventListener("mouseup",this.finishCircle)
-    this.canvas.addEventListener("mousemove",this.drawCircle)
+    this.canvas.addEventListener("mousedown",this.startRect)
+    this.canvas.addEventListener("mouseup",this.finishRect)
+    this.canvas.addEventListener("mousemove",this.drawRect)
+    // this.canvas.addEventListener("mousedown",this.startCircle)
+    // this.canvas.addEventListener("mouseup",this.finishCircle)
+    // this.canvas.addEventListener("mousemove",this.drawCircle)
   },
   methods:{
   resizeCanvas :function() {
@@ -68,6 +68,7 @@ name: "Canvas",data(){
     drawing = true
     this.setStartCoordinates(e)
     imageData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height)
+    imageData.
     this.drawRect(e)
   },
   drawRect : function (e){
@@ -78,11 +79,13 @@ name: "Canvas",data(){
     let height = Y-startY
     this.context.putImageData(imageData,0,0)
     this.context.strokeRect(startX,startY,width,height)
-
   },
   finishRect : function (){
     drawing = false
     this.context.beginPath()
+    // var data = this.context.getImageData(0, 0, this.canvas.width, this.canvas.height);
+    // console.log(data);
+    // console.log(JSON.stringify(data));
   },
     startCircle : function (e){
       drawing = true

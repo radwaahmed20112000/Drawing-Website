@@ -32,7 +32,7 @@
 
 <script>
 import Canvas from "@/components/Canvas";
-import toolsBar from './components/toolsBar.vue'
+// import toolsBar from './components/toolsBar.vue'
 export default {
   name: 'App',
   components: {
