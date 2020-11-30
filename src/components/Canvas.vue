@@ -20,7 +20,7 @@ export default {
 name: "Canvas",
 components: {
    toolsBar
-    
+
     },
 props:['shapedrawing']
   ,
@@ -52,12 +52,12 @@ data(){
      this.canvas.addEventListener("mousedown",this.startShape)
     // this.canvas.addEventListener("mousedown",this.startSketch)
     // this.canvas.addEventListener("mousemove",this.sketch)
-    this.canvas.addEventListener("mousemove",this.drawRect)
+    // this.canvas.addEventListener("mousemove",this.drawRect)
     this.setShapeAttributes("red","blue",7);
     //  this.canvas.addEventListener("mousedown",this.startSketch)
     //  this.canvas.addEventListener("mousemove",this.sketch)
     // this.canvas.addEventListener("mousemove",this.drawCircle)
-    // this.canvas.addEventListener("mousemove",this.drawTriangle)
+    this.canvas.addEventListener("mousemove",this.drawTriangle)
     //this.canvas.addEventListener("mousemove",this.drawEllipse)
     this.canvas.addEventListener("mouseup",this.finishShape)
     this.canvas.addEventListener("click", this.select)
@@ -65,19 +65,19 @@ data(){
   },
   methods:{
     selectShape(e){
-        if(this.selectedshape=="circle")
+        if(this.selectedshape==="circle")
       this.drawCircle(e);
-      else if(this.selectedshape=="pentagon")
+      else if(this.selectedshape==="pentagon")
       this.drawpentagon(e);
-      else if(this.selectedshape=="rectangle")
+      else if(this.selectedshape==="rectangle")
       this.drawRect(e);
-      else if(this.selectedshape=="triangle")
+      else if(this.selectedshape==="triangle")
       this.drawTriangle(e);
-      else if(this.selectedshape=="hexagon")
+      else if(this.selectedshape==="hexagon")
       this.drawRect(e);
-      else if(this.selectedshape=="line")
+      else if(this.selectedshape==="line")
       this.drawline(e);
-      else if(this.selectedshape=="eclipse")
+      else if(this.selectedshape==="eclipse")
       this.drawEllipse(e);
 
     },
@@ -96,9 +96,9 @@ data(){
     this.selectCanvas.width = window.innerWidth
     this.selectCanvas.height = window.innerHeight-this.toolBarHeight
   },
-  clearCanvas(){
-    this.context.clearRect(0,0,window.innerWidth,window.innerHeight);
-  },
+  // clearCanvas(){
+  //   this.context.clearRect(0,0,window.innerWidth,window.innerHeight);
+  // },
   startShape(e){
     drawing = true
     this.setStartCoordinates(e)
@@ -159,7 +159,7 @@ data(){
     var rgbaClick = this.getRGBA(e, true);
     console.log(rgbaClick);
     console.log(this.rgbaCanvas)
-    var bool =  (JSON.stringify(this.rgbaCanvas) == JSON.stringify(rgbaClick))
+    var bool =  (JSON.stringify(this.rgbaCanvas) === JSON.stringify(rgbaClick))
     console.log(bool);
     return bool;
   },
@@ -215,7 +215,7 @@ data(){
     if(!fill) this.selectContext.rect(x,y, w, h);
     else this.selectContext.fillRect(x,y,w,h);
   },
-  /*
+
   startSketch : function(e){
     drawing = true
     this.sketch(e)
@@ -230,7 +230,7 @@ data(){
       this.context.lineTo(startX,startY)
       this.context.stroke()
     }
-  },*/
+  },
  /*
   drawCircle:function (e) {
     if(drawing === false)
@@ -244,7 +244,7 @@ data(){
     this.context.stroke()
   },
 /* Triangle Drawing Method*/
- /* drawTriangle(e){
+  drawTriangle(e){
     if(!drawing){
       return
     }
@@ -259,8 +259,8 @@ data(){
     this.context.fill();
     this.context.beginPath();
   },
-/* Ellipse Drawing Method */
-  /*drawEllipse(e){
+ //Ellipse Drawing Method
+  drawEllipse(e){
     if(!drawing){
         return
     }
@@ -280,7 +280,7 @@ data(){
     this.context.stroke();
     this.context.fill();
     this.context.beginPath();
-  }*/
+  }
 }
 }
 </script>

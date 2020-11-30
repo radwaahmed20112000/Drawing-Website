@@ -1,24 +1,30 @@
 <template>
   <div class="shape">
-    <span class="tab"></span>
-    <label class="label_bar">Color: </label>
-    <span class="space"></span>
-    <input type="color" class="color_picker" id="colorpickerLine" value="#DC143C">
+
+    <color-bar msg="Color:" color="DE3163" key="color"></color-bar>
+
     <span class="tab"></span>
     <label class="label_bar">Opacity: </label>
     <span class="space"></span>
-    <get-input></get-input>
+
+    <get-input numid="numOpacity" divid="divOpacity" rangeid="rangeOpacity"></get-input>
+
     <span class="tab"></span>
     <label class="label_bar">Diameter: </label>
     <span class="space"></span>
-    <get-input></get-input>
+
+    <get-input numid="numDiameter" divid="divDiameter" rangeid="rangeDiameter"></get-input>
   </div>    
 </template>
 
 <script>
+import ColorBar from './ColorBar.vue';
 import GetInput from './GetInput.vue';
 export default {
-  components: { GetInput },
+  components: {
+       GetInput,
+       ColorBar
+ },
   name: 'LineBar',
 }
 </script>

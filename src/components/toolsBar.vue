@@ -9,7 +9,7 @@
      <button  class="grid-item" id="resize" title="resize" >   <i class="material-icons">photo_size_select_small</i> </button>
      <button   class="grid-item" id="brush" title="brush" > <i class="material-icons">brush</i>   </button>
      <button  class="grid-item" id="pen" title="pen" >   <i class="material-icons">create</i> </button>
-     <button @click="$emit('setShape','line')" class="grid-item" id="line" title="line" >   <span style='font-size:20 px;'>&#9586;</span> </button> 
+     <button @click="$emit('setShape','line')" class="grid-item" id="line" title="line" >   <span style='font-size:20px;'>&#9586;</span> </button>
      <button @click="$emit('setShape','circle')" class="grid-item" id="circle" title="circle" >   <i class="material-icons">panorama_fish_eye</i> </button>   
      <button @click="$emit('setShape','triangle')" class="grid-item" id="triangle" title="triangle" >   <i class="material-icons">change_history</i> </button>
     <button @click="$emit('setShape','rectangle')" class="grid-item" id="rectangle" title="rectangle" >   <span style='font-size:30px;'>&#9645;</span> </button>
