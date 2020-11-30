@@ -12,7 +12,7 @@
      <button  class="grid-item" id="pen" title="pen" >   <i class="material-icons">create</i> </button>
 	
 
-     <button  class="grid-item" id="line" title="line" >   <span style='font-size:20 px;'>&#9586;</span> </button> 
+     <button  class="grid-item" id="line" title="line" >   <span style='font-size:20px;'>&#9586;</span> </button>
      <button  class="grid-item" id="circle" title="circle" >   <i class="material-icons">panorama_fish_eye</i> </button>   
      <button  class="grid-item" id="triangle" title="triangle" >   <i class="material-icons">change_history</i> </button>
     <button  class="grid-item" id="rectangle" title="rectangle" >   <span style='font-size:30px;'>&#9645;</span> </button>
@@ -32,7 +32,7 @@
 <script>
 export default {
   name: 'toolsBar',
-  
+
 }
 </script>
 

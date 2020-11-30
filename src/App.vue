@@ -13,6 +13,7 @@ import Tools from './components/Tools.vue';
 //import LineBar from './components/LineBar.vue';
 import ToolsBar from './components/toolsBar.vue';
 import Canvas from './components/Canvas.vue';
+// import toolsBar from './components/toolsBar.vue'
 export default {
   name: 'App',
   components: {
@@ -23,13 +24,13 @@ export default {
     Tools,
   },
   data() {
-   
+
   },
   mounted() {
-   
+
   },
   methods: {
-  }  
+  }
 }
 </script>
 

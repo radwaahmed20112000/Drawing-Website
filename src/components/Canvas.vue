@@ -29,7 +29,8 @@ name: "Canvas",data(){
     selectContext : null,
     mousemoved : false
   }
-  }, mounted() {
+  },
+  mounted() {
     this.canvas = document.getElementById("Canvas")
     this.context = this.canvas.getContext("2d")
     this.selectCanvas = document.getElementById("canvasSelect");
@@ -38,17 +39,20 @@ name: "Canvas",data(){
     window.addEventListener('resize',() => {
       this.resizeCanvas()
     })
-    this.context.fillStyle = "#fff999";
-    this.context.fillRect(0,0,this.canvas.width, this.canvas.height);
     this.rgbaCanvas = this.getCanvasRgba();
      this.canvas.addEventListener("mousedown",this.startShape)
     // this.canvas.addEventListener("mousedown",this.startSketch)
     // this.canvas.addEventListener("mousemove",this.sketch)
-     this.canvas.addEventListener("mousemove",this.drawRect)
+    this.canvas.addEventListener("mousemove",this.drawRect)
+    this.setShapeAttributes("red","blue",7);
+    //  this.canvas.addEventListener("mousedown",this.startSketch)
+    //  this.canvas.addEventListener("mousemove",this.sketch)
     // this.canvas.addEventListener("mousemove",this.drawCircle)
     // this.canvas.addEventListener("mousemove",this.drawTriangle)
+    //this.canvas.addEventListener("mousemove",this.drawEllipse)
     this.canvas.addEventListener("mouseup",this.finishShape)
     this.canvas.addEventListener("click", this.select)
+    //this.canvas.addEventListener("mousemove",this.drawRect)
   },
   methods:{
 /* General Canvas Methods */
@@ -88,7 +92,12 @@ name: "Canvas",data(){
     this.shapesData[this.id] = object;
     this.id++;
   },
-/* Set Coordinates */ 
+  setShapeAttributes(lineColor,fillColor,lineOpacity){
+    this.context.lineWidth = lineOpacity;
+    this.context.fillStyle = fillColor;
+    this.context.strokeStyle = lineColor;
+  },
+/* Set Coordinates */
   setStartCoordinates : function (e){
     startX = e.offsetX
     startY = e.offsetY
@@ -188,8 +197,8 @@ name: "Canvas",data(){
       this.context.lineTo(startX,startY)
       this.context.stroke()
     }
-  },
-
+  },*/
+ /*
   drawCircle:function (e) {
     if(drawing === false)
       return
@@ -198,9 +207,11 @@ name: "Canvas",data(){
     let radius = Math.sqrt(Math.pow((X - startX), 2) - Math.pow((Y - startY), 2))
     this.context.beginPath()
     this.context.arc(startX, startY, radius,0,2*Math.PI)
+    this.context.fill();
     this.context.stroke()
   },
-  drawTriangle(e){
+/* Triangle Drawing Method*/
+ /* drawTriangle(e){
     if(!drawing){
       return
     }
@@ -212,11 +223,25 @@ name: "Canvas",data(){
     this.context.lineTo((X-base),Y);
     this.context.lineTo(startX,startY);
     this.context.stroke();
+    this.context.fill();
     this.context.beginPath();
   },
-  drawEllipse(){
-
-  },*/
+/* Ellipse Drawing Method */
+  /*drawEllipse(e){
+    if(!drawing){
+      return
+    }
+    this.setEndCoordinates(e);
+    var radiusX = Math.abs(X-startX)/2,
+        radiusY = Math.abs(Y-startY)/2,
+        centreX = Math.abs(X-radiusX),
+        centreY = Math.abs(Y-radiusY);
+    this.context.putImageData(imageData,0,0);
+    this.context.ellipse(centreX,centreY,radiusX,radiusY,Math.PI , 0 ,2 * Math.PI);
+    this.context.stroke();
+    this.context.fill();
+    this.context.beginPath();
+  }*/
 }
 }
 </script>
