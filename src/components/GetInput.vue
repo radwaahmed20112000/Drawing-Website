@@ -1,9 +1,9 @@
 <template>
     <div id="Inputs">
-        <input type ="number" id = "num_input" class = "LineOpacity" max = "100" min = "0" value="100" @change="changeRange()">
+        <input type ="number" id = "num_input"  max = "100" min = "0" value="100" @change="changeRange()">
         <button @click="rangeDisplay()" ><i class="material-icons">keyboard_arrow_down</i></button>
-        <div id="ranger">
-            <input type="range" id ="range_input" class ="LineOpacity" max = "100" min="0" value="100" @change="changeNumber()">
+        <div id="ranger" class="div_ranger">
+            <input type="range" id ="range_input"  max = "100" min="0" value="100" @change="changeNumber()">
         </div>
     </div>
 </template>
@@ -12,13 +12,24 @@
 export default {
   name:"GetInput",
     props:{
-      msg:String 
+      numid:String,
+      rangeid:String,
+      divid:String
+    },
+    data() {
+        return {
+            num_id:this.numid,
+            range_id:this.rangeid,
+            div_id:this.divid
+        }
     },
     methods:{ 
         rangeDisplay(){
-        var range = document.getElementById("range_input"),
-            range_div = document.getElementById("ranger");
-        if(range.style.opacity == "0")
+        var range = document.getElementById(this.range_id),
+            range_div = document.getElementById(this.div_id);
+        console.log(range.id,range_div.id);
+
+        if(range.style.opacity === "0")
         {
             range.style.opacity = "1";
             range_div.style.opacity = "1";
@@ -31,17 +42,27 @@ export default {
         },
         changeRange()
         {
-        var num = document.getElementById("num_input"),
-            range = document.getElementById("range_input");      
+        var num = document.getElementById(this.num_id),
+            range = document.getElementById(this.range_id);
         range.value = num.value;
         },
         changeNumber()
         {
-        var num = document.getElementById("num_input"),
-            range = document.getElementById("range_input");
+        var num = document.getElementById(this.num_id),
+            range = document.getElementById(this.range_id);
         num.value = range.value;
         }
-  }
+  },
+  mounted() {
+      var div =  document.getElementById("ranger"),
+        range =  document.getElementById("range_input"),
+        num = document.getElementById("num_input");
+        num.id = this.num_id;
+        range.id = this.range_id;
+        div.id = this.div_id;
+        console.log(num.id,range.id,div.id);
+        console.log(this.num_id,this.range_id,this.div_id);
+  },
 }
 </script>
 <style scoped>
@@ -79,7 +100,7 @@ input[type="range"]{
   position: absolute;
   display: block;
 }
-#ranger{
+.div_ranger{
   border:0.2px solid #DE3163;
   background-color: #ffffff;
   top: 90%;

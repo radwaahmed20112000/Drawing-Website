@@ -1,24 +1,21 @@
 <template>
   <div class="shape">
-    <span class="tab"></span>
-    <label class="label_bar">Line Color: </label>
-    <span class="space"></span>
-    <input type="color" class="color_picker" id="colorpickerLine" value="#DC143C">
+    <color-bar  msg="Line Color:" color="DE3163" id="LineColor" ></color-bar>
+
     <span class="tab"></span>
     <label class="label_bar">Line Opacity: </label>
     <span class="space"></span>
-    <get-input msg=""></get-input>
-    <span class="tab"></span>
-    <label class="label_bar">FillColor:</label>
-    <span class="space"></span>
-    <input type="color" id="colorpickerShape" class="color_picker" value="#F08080">
+    <get-input numid="numLineOpacity" divid="divLineOpacity" rangeid="rangeLineOpacity"></get-input>
+
+    <color-bar  msg= "Fill Color:" color="F08080" id="fillColor"></color-bar>
   </div>
 </template>
 
 <script>
+import ColorBar from './ColorBar.vue'
 import GetInput from './GetInput.vue'
 export default {
-  components: { GetInput },
+  components: { GetInput, ColorBar },
   name: 'ShapesBar',
 }
 </script>

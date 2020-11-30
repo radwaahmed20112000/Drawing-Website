@@ -17,7 +17,7 @@ export default {
 name: "Canvas",
 components: {
    toolsBar
-    
+
     },
 
   
@@ -46,18 +46,36 @@ data(){
   methods:{
     selectShape(e){
       if(this.selectedshape=="circle")
+    this.rgbaCanvas = this.getCanvasRgba();
+     this.canvas.addEventListener("mousedown",this.startShape)
+    // this.canvas.addEventListener("mousedown",this.startSketch)
+    // this.canvas.addEventListener("mousemove",this.sketch)
+    // this.canvas.addEventListener("mousemove",this.drawRect)
+    this.setShapeAttributes("red","blue",7);
+    //  this.canvas.addEventListener("mousedown",this.startSketch)
+    //  this.canvas.addEventListener("mousemove",this.sketch)
+    // this.canvas.addEventListener("mousemove",this.drawCircle)
+    this.canvas.addEventListener("mousemove",this.drawTriangle)
+    //this.canvas.addEventListener("mousemove",this.drawEllipse)
+    this.canvas.addEventListener("mouseup",this.finishShape)
+    this.canvas.addEventListener("click", this.select)
+    //this.canvas.addEventListener("mousemove",this.drawRect)
+  },
+  methods:{
+    selectShape(e){
+        if(this.selectedshape==="circle")
       this.drawCircle(e);
-      else if(this.selectedshape=="pentagon")
+      else if(this.selectedshape==="pentagon")
       this.drawpentagon(e);
-      else if(this.selectedshape=="rectangle")
+      else if(this.selectedshape==="rectangle")
       this.drawRect(e);
-      else if(this.selectedshape=="triangle")
+      else if(this.selectedshape==="triangle")
       this.drawTriangle(e);
-      else if(this.selectedshape=="hexagon")
+      else if(this.selectedshape==="hexagon")
       this.drawRect(e);
-      else if(this.selectedshape=="line")
+      else if(this.selectedshape==="line")
       this.drawline(e);
-      else if(this.selectedshape=="eclipse")
+      else if(this.selectedshape==="eclipse")
       this.drawEllipse(e);
 
     },
@@ -74,9 +92,9 @@ data(){
     this.canvas.width = window.innerWidth
     this.canvas.height = window.innerHeight-toolBarHeight
   },
-  clearCanvas(){
-    this.context.clearRect(0,0,window.innerWidth,window.innerHeight);
-  },
+  // clearCanvas(){
+  //   this.context.clearRect(0,0,window.innerWidth,window.innerHeight);
+  // },
   startShape(e){
     drawing = true
     this.setStartCoordinates(e)
@@ -101,6 +119,83 @@ data(){
     Y = e.offsetY
   },
 /* Free Sketching Methods */
+
+/* Rectangle Drawing Method*/
+  drawRect : function (e){
+    if(drawing === false)
+      return
+    this.setEndCoordinates(e)
+    width = X-startX
+    height = Y-startY
+    this.context.strokeStyle = "black";
+    this.context.lineWidth = 10;
+    this.context.putImageData(imageData,0,0)
+    this.context.strokeRect(startX,startY,width,height)
+    this.mousemoved = true;
+  },
+
+  checkColor(e)
+  {
+    var rgbaClick = this.getRGBA(e, true);
+    console.log(rgbaClick);
+    console.log(this.rgbaCanvas)
+    var bool =  (JSON.stringify(this.rgbaCanvas) === JSON.stringify(rgbaClick))
+    console.log(bool);
+    return bool;
+  },
+  getRGBA(e)
+  {
+    var positions = this.context.getImageData(e.offsetX, e.offsetY, 1, 1); 
+    var rgbaClick = [];
+    rgbaClick[0] = positions.data[0];
+    rgbaClick[1] = positions.data[1];
+    rgbaClick[2] = positions.data[2];
+    rgbaClick[3] = positions.data[3] / 255;
+    return rgbaClick;
+  },
+  getCanvasRgba()
+  {
+    var positions = this.context.getImageData(0, 0, 1, 1); 
+    var rgbaClick = [];
+    rgbaClick[0] = positions.data[0];
+    rgbaClick[1] = positions.data[1];
+    rgbaClick[2] = positions.data[2];
+    rgbaClick[3] = positions.data[3] / 255;
+    return rgbaClick;
+  },
+  select(e)
+  {
+    if(this.checkColor(e)) 
+    {
+      console.log("wrong");
+      return;
+    }
+    //console.log(JSON.stringify(this.shapesData));
+    for(var i =0; i<this.shapesData.length; i++)
+    {
+      var shape = this.shapesData[i];
+      this.selectContext.beginPath();
+      console.log(shape.lineWidth);
+      this.selectContext.lineWidth = shape.lineWidth ;
+      if(shape.type === "rect")
+      {
+        this.rectSelected(shape.fill, shape.xstart, shape.ystart, shape.width, shape.height);
+      }
+      if(this.selectContext.isPointInPath(e.offsetX, e.offsetY))
+      {
+        console.log(i);
+        return i;
+      }
+      this.selectContext.closePath();
+      this.selectContext.clearRect(0,0,this.selectCanvas.width, this.selectCanvas.height);
+    }
+  },
+  rectSelected(fill, x, y, w, h)
+  {
+    if(!fill) this.selectContext.rect(x,y, w, h);
+    else this.selectContext.fillRect(x,y,w,h);
+  },
+
   startSketch : function(e){
     drawing = true
     this.sketch(e)
@@ -114,19 +209,7 @@ data(){
       this.context.stroke()
     }
   },
-/* Rectangle Drawing Method*/
-  drawRect : function (e){
-    if(drawing === false)
-      return
-    this.setEndCoordinates(e)
-    let width = X-startX
-    let height = Y-startY
-    this.context.putImageData(imageData,0,0)
-    this.context.strokeRect(startX,startY,width,height)
-    this.context.fill();
-
-  },
-/* Circles Drawing Method*/
+ /*
   drawCircle:function (e) {
     if(drawing === false)
       return
@@ -138,7 +221,7 @@ data(){
     this.context.fill();
     this.context.stroke()
   },
-/* Triangle Drawing Method*/ 
+/* Triangle Drawing Method*/
   drawTriangle(e){
     if(!drawing){
       return
@@ -162,6 +245,8 @@ data(){
 
 /* pentagon Drawing Method */
   drawpentagon(e){
+ //Ellipse Drawing Method
+  drawEllipse(e){
     if(!drawing){
         return
     }
@@ -184,6 +269,8 @@ data(){
 
   }
 
+    this.context.beginPath();
+  }
 }
 }
 </script>
