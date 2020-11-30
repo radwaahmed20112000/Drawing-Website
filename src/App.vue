@@ -25,31 +25,47 @@
     </div>
     <div class="shape"></div>
    
-   <Canvas :shapedrawing="selectedshape" ></Canvas>
+   <Canvas ></Canvas>
     
     
   </div>
 </template>
 
 <script>
-//import Tools from './components/Tools.vue';
-//import ShapeBar from './components/ShapeBar.vue';
-//import LineBar from './components/LineBar.vue';
 
-import Canvas from './components/Canvas.vue';
+import Canvas from "@/components/Canvas.vue";
 
 export default {
   name: 'App',
   components: {
     Canvas
   },
-  data() {
+ 
 
-  },
   mounted() {
+    //NAVIGATION BAR SETTINGS : 
+    const saveDrawing = document.getElementById("saveDrawing");
+    const saveList = document.getElementById("saveList");
+    const edit = document.getElementById("edit");
+    const editList = document.getElementById("editList");
+    saveDrawing.addEventListener('mouseover', () =>{
+      saveList.style.display = "block";
+    });
+    saveDrawing.addEventListener('mouseout', () =>{
+      saveList.style.display = "none";
+    });
+    edit.addEventListener('mouseover', () =>{
+      editList.style.display = "block";
+    });
+    edit.addEventListener('mouseout', () =>{
+      editList.style.display = "none";
+    });
+    //End Navigation Bar
 
   },
-  methods: {
+
+  methods:{
+   
   }
 }
 </script>
