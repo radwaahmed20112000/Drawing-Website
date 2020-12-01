@@ -13,7 +13,7 @@
      <button @click="$emit('setshape','circle')" class="grid-item" id="circle" title="circle" >   <i class="material-icons">panorama_fish_eye</i> </button>   
      <button @click="$emit('setshape','triangle')" class="grid-item" id="triangle" title="triangle" >   <i class="material-icons">change_history</i> </button>
     <button @click="$emit('setshape','rectangle')" class="grid-item" id="rectangle" title="rectangle" >   <span style='font-size:30px;'>&#9645;</span> </button>
-    <button @click="$emit('setshape','eclipse')" class="grid-item" id="eclipse" title="eclipse" >   <span style='font-size:30px;'>&#x2B2D;</span> </button>
+    <button @click="$emit('setshape','ellipse')" class="grid-item" id="eclipse" title="eclipse" >   <span style='font-size:30px;'>&#x2B2D;</span> </button>
     <button @click="$emit('setshape','hexagon')" class="grid-item" id="hexagon" title="hexagon" >   <span style='font-size:30px;'>	&#11041;</span> </button>
       <button @click="$emit('setshape','pentagon')" class="grid-item" id="pentagon" title="pentagon" >   <span style='font-size:30px;'>	&#11040;</span> </button>
    <button  class="grid-item" id="format_color_fill" title="format_color_fill" >   <i class="material-icons">format_color_fill</i> </button>
