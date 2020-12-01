@@ -67,34 +67,23 @@ data(){
   },
   methods:{
   selectShape(e){
-    if(this.selectedshape==="circle"){
-      this.setEndCoordinates(e);
+    
+    this.setEndCoordinates(e);
+    if(this.selectedshape==="circle")
       this.drawCircle(e);
-    }
-    else if(this.selectedshape==="pentagon"){
-      this.setEndCoordinates(e);
+    else if(this.selectedshape==="pentagon")
       this.drawPolygon(5,e);
-    }
-    else if(this.selectedshape=="rectangle"){
-      this.setEndCoordinates(e);
+    else if(this.selectedshape=="rectangle")
       this.drawRect(e);
-    }
-    else if(this.selectedshape=="triangle"){
-      this.setEndCoordinates(e);
+    else if(this.selectedshape=="triangle")
       this.drawTriangle(e);
-    }
-    else if(this.selectedshape=="hexagon"){
-      this.setEndCoordinates(e);
+    else if(this.selectedshape=="hexagon")
       this.drawPolygon(6,e);
-    }
-    else if(this.selectedshape=="line"){
-      this.setEndCoordinates(e);
+    else if(this.selectedshape=="line")
       this.drawline(e);
-    }
-    else if(this.selectedshape=="ellipse"){
-      this.setEndCoordinates(e);
+    else if(this.selectedshape=="ellipse")
       this.drawEllipse(e);
-    }
+    
   },
     setshape(value){
       this.selectedshape=value;
