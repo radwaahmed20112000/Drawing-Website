@@ -11,7 +11,6 @@
 import axios from 'axios';
 const apiUrl = "http://localhost:8080"
 import toolsBar from '@/components/toolsBar.vue'
-const apiUrl = "http://localhost:8080"
 
 let drawing = false;
 let editing = false;
