@@ -1,20 +1,19 @@
 package com.example.model;
 
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.example.model.Shapes.Shape;
+import com.example.model.Shapes.ShapeFactory;
 
 import java.util.HashMap;
-import java.util.Map;
 
 public class Canvas {
     private ShapeFactory factory;
-    private HashMap<Long, IShape> shapes;
-    private HashMap<String, IShape> operationsList;
-    private IShape currentShape;
+    private HashMap<Long, Shape> shapes;
+    private HashMap<String, Shape> operationsList;
+    private Shape currentShape;
     private static Canvas canvas;
     private long currentID = 0;
     private Canvas(){
-        shapes = new HashMap<Long, IShape>();
+        shapes = new HashMap<Long, Shape>();
         factory = new ShapeFactory();
     }
 
@@ -30,21 +29,12 @@ public class Canvas {
         Creates new shape , Add its Properties .
         return shape
      */
-    public void drawShape(String shape,String JSONDimensions ,String JSONProperties)
+    public void drawShape(Shape shape)
     {
-        HashMap<String,String> properties = fromJsonToMap(JSONProperties);
-        HashMap<String,String> dimensions = fromJsonToMap(JSONDimensions);
-        IShape newShape = factory.createShape(shape,currentID,dimensions,properties);
-       // newShape.setProperties(properties);
+        Shape newShape = factory.createShape(shape);
         shapes.put(currentID, newShape);
         currentID++;
     }
 
-    public HashMap<String, String> fromJsonToMap(String JSONString)
-    {
-        Map<String, String> retMap = new Gson().fromJson(
-                JSONString, new TypeToken<HashMap<String, String>>() {}.getType()
-        );
-        return (HashMap<String, String>) retMap;
-    }
+
 }

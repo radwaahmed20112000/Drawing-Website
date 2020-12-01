@@ -1,10 +1,8 @@
-package com.example.model;
+package com.example.model.Shapes;
 
 import java.util.HashMap;
 
 public interface IShape {
-    HashMap<String, String> properties = null;
-    public String id = null;
     public void setId(long id);
     public void setProperties(HashMap<String, String> properties);
     public void setDimensions(HashMap<String,String> dimensions);
