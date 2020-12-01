@@ -7,18 +7,32 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Shape {
-    public String getProperties() {
-        return properties;
+    String dimensions;
+    String shapeType;
+    HashMap<String,String> JSONDimensions;
+    HashMap<String,String> JSONProperties;
+    String properties;
+
+    public Shape( HashMap<String,String>  JSONProperties,  HashMap<String,String>  JSONDimensions, String shapeType) {
+        this.JSONProperties = JSONProperties;
+        this.JSONDimensions = JSONDimensions;
+        this.shapeType = shapeType;
     }
+
+    public HashMap<String, String> getJSONProperties() {
+        return JSONProperties;
+    }
+
+    public HashMap<String, String> getJSONDimensions() {
+        return JSONDimensions;
+    }
+
 
     public void setProperties(String properties) {
         this.properties = properties;
         this.JSONProperties = fromJsonToMap(properties);
     }
 
-    public String getDimensions() {
-        return dimensions;
-    }
 
     public void setDimensions(String dimensions) {
         this.dimensions = dimensions;
@@ -32,21 +46,6 @@ public class Shape {
     public void setShapeType(String shapeType) {
         this.shapeType = shapeType;
     }
-
-    String dimensions;
-    String shapeType;
-    HashMap<String,String> JSONDimensions;
-    HashMap<String,String> JSONProperties;
-     String properties;
-
-    public Shape( HashMap<String,String>  JSONProperties,  HashMap<String,String>  JSONDimensions, String shapeType) {
-        this.JSONProperties = JSONProperties;
-        this.JSONDimensions = JSONDimensions;
-        this.shapeType = shapeType;
-    }
-
-
-
 
 
     private HashMap<String, String> fromJsonToMap(String JSONString)

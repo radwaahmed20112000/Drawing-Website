@@ -10,6 +10,7 @@ import java.util.Map;
 @CrossOrigin
 public class Controller {
     Canvas myCanvas = Canvas.getInstance();
+
     @PostMapping("/shapes")
     public Shape drawShape(@RequestBody Shape shape) {
         myCanvas.drawShape(shape);

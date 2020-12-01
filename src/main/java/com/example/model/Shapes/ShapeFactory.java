@@ -4,21 +4,22 @@ import com.example.model.Shapes.Polygons.*;
 
 public class ShapeFactory {
     public Shape createShape(Shape shape){
+        System.out.println(shape.getJSONDimensions());
         if(shape.shapeType.equalsIgnoreCase("RECTANGLE"))
-            shape = new Rectangle(shape.JSONDimensions,shape.JSONProperties,shape.shapeType);
+            shape = new Rectangle(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
         else if(shape.shapeType.equalsIgnoreCase("CIRCLE"))
-            shape = new Circle(shape.JSONDimensions,shape.JSONProperties,shape.shapeType);
+            shape = new Circle(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
         else if(shape.shapeType.equalsIgnoreCase("Ellipse"))
-            shape = new Ellipse(shape.JSONDimensions,shape.JSONProperties,shape.shapeType);
+            shape = new Ellipse(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
         else if(shape.shapeType.equalsIgnoreCase("LineSegment"))
-            shape = new LineSegment(shape.JSONDimensions,shape.JSONProperties,shape.shapeType);
+            shape = new LineSegment(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
         else if(shape.shapeType.equalsIgnoreCase("Pentagon"))
-            shape = new Pentagon(shape.JSONDimensions,shape.JSONProperties,shape.shapeType);
+            shape = new Pentagon(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
         else if(shape.shapeType.equalsIgnoreCase("Hexagon"))
-            shape = new Hexagon(shape.JSONDimensions,shape.JSONProperties,shape.shapeType);
+            shape = new Hexagon(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
         else if(shape.shapeType.equalsIgnoreCase("Triangle"))
-            shape = new Triangle(shape.JSONDimensions,shape.JSONProperties,shape.shapeType);
-            return shape;
+            shape = new Triangle(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
+        return shape;
     }
 
 }
