@@ -11,6 +11,8 @@
 import axios from 'axios';
 const apiUrl = "http://localhost:8080"
 import toolsBar from '@/components/toolsBar.vue'
+const apiUrl = "http://localhost:8080"
+
 let drawing = false;
 let editing = false;
 let startX = 0;
@@ -127,14 +129,15 @@ data(){
       },
       Dimension;
       style = JSON.stringify(style);
-      if(this.selectedshape =="circle" || this.selectedshape == "ellipse"){
+      if(this.selectedshape ==="circle" || this.selectedshape === "ellipse"){
         Dimension = {
           radiusX : this.radiusx,
           radiusY : this.radiusy,
           CenterX : Math.abs(X-this.radiusx),
           CenterY : Math.abs(Y-this.radiusy)
         }
-      }else if(this.selectedshape == "pentagon" || this.selectedshape == "hexagon" ||this.selectedshape == "triangle" || this.selectedshape == "rectangle" ){
+      }else if(this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
+          ||this.selectedshape === "triangle" || this.selectedshape === "rectangle" ){
         Dimension = {
           start_X : startX,
           start_Y : startY,
@@ -144,10 +147,6 @@ data(){
       }
       Dimension = JSON.stringify(Dimension);
       this.sendShapeData(Dimension,style);
-      X = 0
-      Y = 0
-      startX = 0
-      startY = 0 
       /*this.endPos = [e.offsetX, e.offsetY];
       if(!this.mousemoved) return;
       this.mousemoved = false;
@@ -315,7 +314,7 @@ data(){
         this.context.putImageData(imageData,0,0);
         this.setEndCoordinates(e);
       }
-      var base = (endx-sX)*2;
+      const base = (endx - sX) * 2;
       this.context.moveTo(sX,sY);
       this.context.lineTo(endx,endy);
       this.context.lineTo((endx -base),endy);
@@ -329,9 +328,9 @@ data(){
       if(!drawing && !editing){return}
       if(drawing){
         this.setEndCoordinates(e);
-        radiusX = Math.abs(X-startX)/2,
-        radiusY = Math.abs(Y-startY)/2,
-        centreX = Math.abs(X-radiusX),
+        radiusX = Math.abs(X-startX)/2
+        radiusY = Math.abs(Y-startY)/2
+        centreX = Math.abs(X-radiusX)
         centreY = Math.abs(Y-radiusY);
         this.context.putImageData(imageData,0,0);
       }
@@ -348,12 +347,12 @@ data(){
         this.context.putImageData(imageData,0,0);
         this.setEndCoordinates(e);
       }
-      const radius = eX-sX;
-      const step  = 2 * Math.PI / numberOfSides;
+      const radius = eX - sX;
+      const step = 2 * Math.PI / numberOfSides;
       const shift = (Math.PI / 180.0) * -18;
-    
-      for(var i = 0 ; i <= numberOfSides ; i++ ){
-        var curStep = i * step + shift;
+
+      for(let i = 0 ; i <= numberOfSides ; i++ ){
+        const curStep = i * step + shift;
         this.context.lineTo( eX + radius * Math.cos(curStep) ,eY + radius * Math.sin(curStep));
       }
       this.context.stroke();
