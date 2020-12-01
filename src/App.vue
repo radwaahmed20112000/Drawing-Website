@@ -21,10 +21,11 @@ export default {
     Tools,
   },
   data() {
-
+    return{
+    }
   },
   mounted() {
-
+    console.log(this.Canvas.data()); 
   },
   methods: {
   }
