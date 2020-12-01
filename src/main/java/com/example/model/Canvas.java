@@ -7,6 +7,11 @@ import java.util.HashMap;
 
 public class Canvas {
     private ShapeFactory factory;
+
+    public HashMap<Long, Shape> getShapes() {
+        return shapes;
+    }
+
     private HashMap<Long, Shape> shapes;
     private HashMap<String, Shape> operationsList;
     private Shape currentShape;
