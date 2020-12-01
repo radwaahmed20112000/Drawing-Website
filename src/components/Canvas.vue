@@ -10,6 +10,8 @@
 <script>
 import axios from 'axios';
 import toolsBar from '@/components/toolsBar.vue'
+const apiUrl = "http://localhost:8080"
+
 let drawing = false;
 let startX = 0;
 let startY = 0;
@@ -64,19 +66,19 @@ data(){
   },
   methods:{
   selectShape(e){
-    if(this.selectedshape=="circle")
+    if(this.selectedshape==="circle")
       this.drawCircle(e);
-    else if(this.selectedshape=="pentagon")
+    else if(this.selectedshape==="pentagon")
       this.drawPolygon(5,e);
-    else if(this.selectedshape=="rectangle")
+    else if(this.selectedshape==="rectangle")
       this.drawRect(e);
-    else if(this.selectedshape=="triangle")
+    else if(this.selectedshape==="triangle")
       this.drawTriangle(e);
-    else if(this.selectedshape=="hexagon")
+    else if(this.selectedshape==="hexagon")
       this.drawPolygon(6,e);
-    else if(this.selectedshape=="line")
+    else if(this.selectedshape==="line")
       this.drawline(e);
-    else if(this.selectedshape=="eclipse")
+    else if(this.selectedshape==="eclipse")
       this.drawEllipse(e);
   },
     setshape(value){
@@ -103,22 +105,23 @@ data(){
     finishShape(){
       drawing = false
       this.context.beginPath();
-      var style = {
-      Color : this.currentCollor,
-      fillColor : this.currentFillColor,
-      Transparent : this.fill,
-      lineWidth : this.currentLineWidth
-      },
-      Dimension;
+      let style = {
+            Color: this.currentCollor,
+            fillColor: this.currentFillColor,
+            Transparent: this.fill,
+            lineWidth: this.currentLineWidth
+          },
+          Dimension;
       style = JSON.stringify(style);
-      if(this.selectedshape =="circle" || this.selectedshape == "ellipse"){
+      if(this.selectedshape ==="circle" || this.selectedshape === "ellipse"){
         Dimension = {
           radiusX : this.radiusx,
           radiusY : this.radiusy,
           CenterX : Math.abs(X-this.radiusx),
           CenterY : Math.abs(Y-this.radiusy)
         }
-      }else if(this.selectedshape == "pentagon" || this.selectedshape == "hexagon" ||this.selectedshape == "triangle" || this.selectedshape == "rectangle" ){
+      }else if(this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
+          ||this.selectedshape === "triangle" || this.selectedshape === "rectangle" ){
         Dimension = {
           start_X : startX,
           start_Y : startY,
@@ -127,7 +130,7 @@ data(){
         }
       }
       Dimension = JSON.stringify(Dimension);
-      this.sendShape(Dimension,style);
+      this.sendShapeData(Dimension,style);
       /*this.endPos = [e.offsetX, e.offsetY];
       if(!this.mousemoved) return;
       this.mousemoved = false;
@@ -174,16 +177,17 @@ data(){
       this.mousemoved = true;
     },
   /* Data Requests */
-    sendShapeData(Dimension , style){
-      axios.post(
-          `http://localhost:8080/`,
-          {
-              params:{
-                  ShapeName: this.currentShape,
-                  Dimensions: Dimension,
-                  Styles : style   
-          }
-      })
+    async sendShapeData(Dimension, style) {
+      let data = {
+        shapeType: this.selectedshape,
+        dimensions: Dimension,
+        properties: style
+
+      }
+      const response = await axios.post(
+          apiUrl+"/shapes",data,{headers: { 'Content-Type': 'application/json', } }
+          )
+      console.log(response.request.responseURL)
     },
     GetShapesData(){
       axios.get(
@@ -291,7 +295,7 @@ data(){
         this.context.putImageData(imageData,0,0);
         this.setEndCoordinates(e);
       }
-      var base = (endx-sX)*2;
+      const base = (endx - sX) * 2;
       this.context.moveTo(sX,sY);
       this.context.lineTo(endx,endy);
       this.context.lineTo((endx -base),endy);
@@ -304,9 +308,9 @@ data(){
     drawEllipse(e , radiusX = 0 ,radiusY = 0 ,centreX = 0,centreY = 0 ){
       if(drawing){
         this.setEndCoordinates(e);
-        radiusX = Math.abs(X-startX)/2,
-        radiusY = Math.abs(Y-startY)/2,
-        centreX = Math.abs(X-radiusX),
+        radiusX = Math.abs(X-startX)/2
+        radiusY = Math.abs(Y-startY)/2
+        centreX = Math.abs(X-radiusX)
         centreY = Math.abs(Y-radiusY);
         this.context.putImageData(imageData,0,0);
       }
@@ -317,17 +321,17 @@ data(){
       this.context.fill();
       this.context.beginPath();
     },
-    drawPolygon(numberOfSides ,e ,sX = startX,sY = startY,eX = X,eY = Y){
+    drawPolygon(numberOfSides ,e ,sX = startX/*,sY = startY*/,eX = X,eY = Y){
       if(drawing){
         this.context.putImageData(imageData,0,0);
         this.setEndCoordinates(e);
       }
-      var radius = eX-sX;
-      var step  = 2 * Math.PI / numberOfSides;
-      var shift = (Math.PI / 180.0) * -18;
-    
-      for(var i = 0 ; i <= numberOfSides ; i++ ){
-        var curStep = i * step + shift;
+      const radius = eX - sX;
+      const step = 2 * Math.PI / numberOfSides;
+      const shift = (Math.PI / 180.0) * -18;
+
+      for(let i = 0 ; i <= numberOfSides ; i++ ){
+        const curStep = i * step + shift;
         this.context.lineTo( eX + radius * Math.cos(curStep) ,eY + radius * Math.sin(curStep));
       }
       this.context.stroke();
