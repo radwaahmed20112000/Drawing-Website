@@ -9,6 +9,7 @@ public class Canvas {
     private ShapeFactory factory;
     private HashMap<Long, Shape> shapes;
     private HashMap<String, Shape> operationsList;
+    Undo myUndo;
     private Shape currentShape;
     private static Canvas canvas;
     private long currentID = 0;
@@ -16,6 +17,8 @@ public class Canvas {
     private Canvas(){
         shapes = new HashMap<Long, Shape>();
         factory = new ShapeFactory();
+        myUndo = new Undo();
+
     }
     public static Canvas getInstance(){
         if(canvas == null){
@@ -32,11 +35,35 @@ public class Canvas {
     {
         Shape newShape = factory.createShape(shape,currentID);
         shapes.put(currentID, newShape);
+        myUndo.addShape(newShape);
+        System.out.println(myUndo.getUndo().size());
         currentID++;
     }
     public void clearCanvas(){
         getShapes().clear();
         currentID = 0;
+    }
+
+    public void undoCanvas(){
+
+       Shape removedShape= myUndo.undoShape();
+       if(removedShape!=null){
+           shapes.remove(removedShape.getID());
+           currentID--;
+       }
+
+
+    }
+
+    public void redoCanvas(){
+
+        Shape removedShape= myUndo.redoShape();
+        if(removedShape!=null) {
+            removedShape.setID(currentID);
+            shapes.put(currentID, removedShape);
+            currentID++;
+        }
+
     }
 
 
