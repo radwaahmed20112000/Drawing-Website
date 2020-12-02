@@ -538,7 +538,7 @@ export default {
         }else if(shape.shapeType === "triangle"){
           this.triangleSelected(shape.jsondimensions.start_X, shape.jsondimensions.start_Y,shape.jsondimensions.end_X, shape.jsondimensions.end_Y);
         }else if(shape.shapeType === "ellipse") {
-          this.ellipseSelected(shape.shape.jsondimensions.end_X, shape.shape.jsondimensions.end_Y,shape.jsondimensions.radiusX,shape.jsondimensions.radiusY,shape.jsondimensions.CenterX, shape.jsondimensions.CenterY);
+          this.ellipseSelected(shape.jsondimensions.end_X, shape.jsondimensions.end_Y,shape.jsondimensions.radiusX,shape.jsondimensions.radiusY,shape.jsondimensions.CenterX, shape.jsondimensions.CenterY);
         }else if(shape.shapeType === "pentagon"){
           this.polygonSelected(5, shape.jsondimensions.start_X, shape.jsondimensions.start_Y,shape.jsondimensions.end_X, shape.jsondimensions.end_Y);
         }else if(shape.shapeType === "hexagon") {
@@ -629,6 +629,6 @@ export default {
   padding: 0;
   margin : 0;
   border: 3px solid black;
-  /*display: none;*/
+  display: none;
 }
 </style>
