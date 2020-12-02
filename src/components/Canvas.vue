@@ -57,15 +57,23 @@ export default {
     this.rgbaCanvas = this.getCanvasRgba();
     this.eraseShapes()
     this.rgbaCanvas = this.getCanvasRgba();
-    this.canvas.addEventListener("click", this.select);
-    this.canvas.addEventListener("mousedown", (e)=> {
-      if(Selection)
-        this.startEdit(e);
+
+
+    /***************/
+    document.getElementById("move").addEventListener("click",()=> {
+      Selection = true
+    })
+
+    this.canvas.addEventListener("mousedown", async (e)=> {
+      if(Selection){//andmove
+        await this.select(e)
+        this.startEdit(e)
+      }
       else
         this.startShape(e);
     });
-    this.canvas.addEventListener("mousemove", (e)=>{
-      if(Selection)
+  this.canvas.addEventListener("mousemove", (e)=>{
+      if(Selection)//andmove
         this.moveShape(e);
       else if(drawing)
         this.selectShape(e);
@@ -76,6 +84,22 @@ export default {
       else
         this.finishShape(e);
     });
+    // this.canvas.addEventListener("mousedown", this.startShape)
+    // this.canvas.addEventListener("mousemove",this.selectShape)
+    // this.canvas.addEventListener("mouseup",this.finishShape)
+    // document.getElementById("move").addEventListener("click",()=> {
+    //   this.canvas.addEventListener("mousedown", (e) => {
+    //     this.select(e);
+    //     this.startEdit(e);
+    //   })
+    //   this.canvas.addEventListener("mousemove", (e) => {
+    //     this.moveShape(e);
+    //   })
+    //       this.canvas.addEventListener("mouseup", (e) => {
+    //       this.finishEdit(e);
+    //       })
+    // })
+
     document.getElementById("delete").addEventListener("click",this.eraseShapes);
   },
   methods:{
@@ -90,7 +114,8 @@ export default {
 
     },
     selectShape(e){
-      if(!drawing) return;
+      drawing = true
+      // if(!drawing) return;
       this.setEndCoordinates(e);
       if(this.selectedshape==="circle")
         this.drawCircle(e);
@@ -114,14 +139,15 @@ export default {
     },
     setshape(value){
       this.selectedshape=value;
+      Selection = false
     },
     moveShape(e){
-      if(!Selection) return;
+      if(!editing) return;
       this.drawShapeEdit(e,this.currentId);
     },
     drawShapeEdit(e,id){
       console.log(id);
-      this.setshape(this.shapesData[id].shapeType)
+      this.selectedshape=this.shapesData[id].shapeType;
       const shape = this.shapesData[id];
       if(this.selectedshape==="circle")
         this.drawCircle(e)
@@ -153,13 +179,12 @@ export default {
       toolsBar.style.height = this.canvas.height
     },
     drawCanvas(id){
-      this.canvas.addEventListener("mousemove",()=>{})
+     // this.canvas.addEventListener("mousemove",()=>{})
       DrawingCanvasMode = true
       console.log("HAHA")
       this.clearCanvas()
       for(let i = 0 ; i < this.shapesData.length; i++ ){
-        console.log(this.shapesData[i].id.localeCompare(id) === "-1")
-        if(this.shapesData[i].id.localeCompare(id) === "-1")
+        if(this.shapesData[i].id === id)
           continue
         this.drawShapeProgrammatically(i)
       }
@@ -171,13 +196,15 @@ export default {
       this.context.clearRect(0,0,window.innerWidth,window.innerHeight);
     },
     startEdit(/*id=0*/){
-      editing = true
+      // editing = true
+      if(!editing)return
       console.log("hiiihiihihihihihhihihiihhi")
       this.drawCanvas(this.currentId)
     },
     finishEdit(){
       editing = false
       this.context.beginPath();
+      imageData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height)
     },
     startShape(e){
       if(this.selectedshape === '') return;
@@ -322,7 +349,7 @@ export default {
       this.mousemoved = true;
     },
     drawTriangleEdit(e , base,height ) {
-      if(!Selection){return}
+      //if(!Selection){return}
       this.context.putImageData(imageData,0,0);
       this.context.moveTo(e.offsetX,e.offsetY);
       this.context.lineTo(e.offsetX + base/2 ,e.offsetY + height);
@@ -518,8 +545,9 @@ export default {
       rgbaClick[3] = positions.data[3] / 255;
       return rgbaClick;
     },
-    select(e)
+    async select(e)
     {
+      editing = false
       if(this.checkColor(e))
       {
         console.log("wrong");
@@ -550,7 +578,7 @@ export default {
         {
           this.selectContext.closePath();
           this.selectContext.clearRect(0,0,this.selectCanvas.width, this.selectCanvas.height);
-          Selection = true
+         editing = true
           this.currentId = shape.id;
           console.log(shape.id)
           console.log("Selected")
