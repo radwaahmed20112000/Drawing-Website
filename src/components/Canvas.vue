@@ -81,9 +81,9 @@ export default {
   methods:{
     async setUndoMode(value){
 
-       await this.GetShapesData("/"+value);
-       this.clearCanvas();
-       for(let i = 0 ; i < this.shapesData.length; i++ ){
+      await this.GetShapesData("/"+value);
+      this.clearCanvas();
+      for(let i = 0 ; i < this.shapesData.length; i++ ){
 
         this.drawShapeProgrammatically(i)
       }
@@ -109,7 +109,6 @@ export default {
     },
     setselectmode()
     {
-      this.shapeSelected = '';
       editing = true
       console.log("select moooooooooooode");
     },
@@ -120,24 +119,25 @@ export default {
       if(!Selection) return;
       this.drawShapeEdit(e,this.currentId);
     },
-    drawShapeEdit(e,id=0){
+    drawShapeEdit(e,id){
       console.log(id);
       this.setshape(this.shapesData[id].shapeType)
-      var shape = this.shapesData[id];
+      const shape = this.shapesData[id];
       if(this.selectedshape==="circle")
         this.drawCircle(e)
       else if(this.selectedshape==="pentagon")
         this.drawPolygonEdit(5,e );
       else if(this.selectedshape==="rectangle")
-      this.drawRectEdit(e ,( shape.jsondimensions.end_X - shape.jsondimensions.start_X ),(shape.jsondimensions.end_Y - shape.jsondimensions.start_Y) );
+        this.drawRectEdit(e ,( shape.jsondimensions.end_X - shape.jsondimensions.start_X ),(shape.jsondimensions.end_Y - shape.jsondimensions.start_Y) );
       else if(this.selectedshape==="triangle")
-      this.drawTriangleEdit(e ,( shape.jsondimensions.end_X - shape.jsondimensions.start_X )*2, shape.jsondimensions.end_Y - shape.jsondimensions.start_Y);
+        this.drawTriangleEdit(e ,( shape.jsondimensions.end_X - shape.jsondimensions.start_X )*2, shape.jsondimensions.end_Y - shape.jsondimensions.start_Y);
       else if(this.selectedshape==="hexagon")
         this.drawPolygon(6,e);
       else if(this.selectedshape==="line")
-      this.drawLine(e);
+        this.drawLine(e);
       else if(this.selectedshape==="ellipse")
-      this.drawEllipseEdit(e ,shape.jsondimensions.radiusX, shape.jsondimensions.radiusY , shape.jsondimensions.centerX, shape.jsondimensions.centerY );
+        this.drawEllipseEdit(e ,shape.jsondimensions.radiusX, shape.jsondimensions.radiusY
+            , shape.jsondimensions.CenterX, shape.jsondimensions.CenterY);
     },
     /* General Canvas Methods */
     resizeCanvas() {
@@ -199,7 +199,7 @@ export default {
           },
           Dimension;
       style = JSON.stringify(style);
-        console.log("yarab"+this.selectedshape);
+      console.log("yarab"+this.selectedshape);
       if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
         Dimension = {
           radiusX: this.radiusx,
@@ -261,29 +261,29 @@ export default {
         dimensions: Dimension,
         properties: style
       }
-       console.log("hello"+this.selectedshape);
+      console.log("hello"+this.selectedshape);
       await axios.post(apiUrl + "/shape",data)
     },
     async GetShapesData(para){
       await axios.get(apiUrl + para).then(Response => {
-      console.log(Response.data)
-      console.log("LENGTH"+Object.keys(Response.data).length)
-      this.shapesData=[];
-      for(let i =0 ;i < Object.keys(Response.data).length;i++){
-        console.log("RESPOSE"+Response.data[i])
-        this.shapesData[i] = {
-          id : Response.data[i].id,
-          shapeType: Response.data[i].shapeType,
-          jsondimensions: JSON.parse(JSON.stringify(Response.data[i].jsondimensions)),
-          jsonproperties: JSON.parse(JSON.stringify(Response.data[i].jsonproperties))
-        }
-      console.log(this.shapesData);
-      }})
+        console.log(Response.data)
+        console.log("LENGTH"+Object.keys(Response.data).length)
+        this.shapesData=[];
+        for(let i =0 ;i < Object.keys(Response.data).length;i++){
+          console.log("RESPOSE"+Response.data[i])
+          this.shapesData[i] = {
+            id : Response.data[i].id,
+            shapeType: Response.data[i].shapeType,
+            jsondimensions: JSON.parse(JSON.stringify(Response.data[i].jsondimensions)),
+            jsonproperties: JSON.parse(JSON.stringify(Response.data[i].jsonproperties))
+          }
+          console.log(this.shapesData);
+        }})
     },
     async eraseShapes(){
       this.shapesData = []
       this.clearCanvas()
-     const response =  await axios.delete(apiUrl + "/shapes")
+      const response =  await axios.delete(apiUrl + "/shapes")
       console.log("OOO"+response.data)
     },
     /* Free Sketching Methods */
@@ -444,7 +444,7 @@ export default {
     drawCircle(e) {
       if(!drawing && !DrawingCanvasMode){return}
       if(drawing === true ){
-          this.setEndCoordinates(e)
+        this.setEndCoordinates(e)
       }
       this.context.putImageData(imageData,0,0);
       this.context.beginPath()
@@ -496,11 +496,7 @@ export default {
       const rgbaClick = this.getRGBA(e, true);
       const bool = (JSON.stringify(this.rgbaCanvas).localeCompare(JSON.stringify(rgbaClick)));
       console.log(bool)
-      if(bool === "-1"){
-        return true
-      }else{
-        return false 
-      }
+      return bool === "-1";
     },
     getRGBA(e)
     {
@@ -537,9 +533,9 @@ export default {
         this.selectContext.beginPath();
         if(shape.shapeType === "rectangle") {
           this.rectSelected(shape.jsondimensions.start_X, shape.jsondimensions.start_Y,shape.jsondimensions.end_X, shape.jsondimensions.end_Y);
-        }else if(shape.shapeType === "circle" ){ 
+        }else if(shape.shapeType === "circle" ){
           this.circleSelected(shape.jsondimensions.start_X, shape.jsondimensions.start_Y,shape.jsondimensions.end_X, shape.jsondimensions.end_Y, shape.jsondimensions.radiusX);
-        }else if(shape.shapeType === "triangle"){ 
+        }else if(shape.shapeType === "triangle"){
           this.triangleSelected(shape.jsondimensions.start_X, shape.jsondimensions.start_Y,shape.jsondimensions.end_X, shape.jsondimensions.end_Y);
         }else if(shape.shapeType === "ellipse") {
           this.ellipseSelected(shape.shape.jsondimensions.end_X, shape.shape.jsondimensions.end_Y,shape.jsondimensions.radiusX,shape.jsondimensions.radiusY,shape.jsondimensions.CenterX, shape.jsondimensions.CenterY);
@@ -626,7 +622,7 @@ export default {
   position: absolute;
   padding: 0;
   margin: 0;
-  /*border: darkgrey 2px solid;*/ 
+  /*border: darkgrey 2px solid;*/
   border: 3px solid black;
 }
 #canvasSelect{
