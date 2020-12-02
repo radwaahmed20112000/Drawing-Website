@@ -2,7 +2,7 @@
   <div>
     <canvas id="canvasSelect"></canvas>
     <canvas id="Canvas" ></canvas>
-    <toolsBar id="toolsBar" @setshape="setshape"></toolsBar>
+    <toolsBar id="toolsBar" @setshape="setshape" @setselectmode = "setselectmode"/>
   </div>
 </template>
 
@@ -58,6 +58,7 @@ export default {
     window.addEventListener('resize',() => {
       this.resizeCanvas()
     })
+    this.rgbaCanvas = this.getCanvasRgba();
     this.eraseShapes()
     document.getElementById("move").addEventListener("click", ()=>{
       if(DrawingCanvasMode)
