@@ -2,17 +2,7 @@
   <div>
     <canvas id="canvasSelect"></canvas>
     <canvas id="Canvas" ></canvas>
-<<<<<<< Updated upstream
-<!--    <toolsBar id="toolsBar" @setshape="setshape" @setundo="setUndoMode"></toolsBar>-->
     <toolsBar id="toolsBar" @setshape="setshape" @setselectmode = "setselectmode"/>
-=======
-<<<<<<< HEAD
-    <toolsBar id="toolsBar" @setshape="setshape" @setselectmode ="setselectmode"></toolsBar>
-=======
-<!--    <toolsBar id="toolsBar" @setshape="setshape" @setundo="setUndoMode"></toolsBar>-->
-    <toolsBar id="toolsBar" @setshape="setshape" @setselectmode = "setselectmode"/>
->>>>>>> b3b6526346dad7f02d1c8c1b99374622f0d64afc
->>>>>>> Stashed changes
   </div>
 </template>
 
@@ -97,9 +87,6 @@ export default {
 
         this.drawShapeProgrammatically(i)
       }
-
-
-
 
     },
     selectShape(e){
@@ -224,22 +211,10 @@ export default {
           end_X : X,
           end_Y : Y
         }
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
+
       } else if (this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
           || this.selectedshape === "triangle" || this.selectedshape === "rectangle" || this.selectedshape === "line") {
-=======
->>>>>>> Stashed changes
-         
-      } else if (this.selectedshape === "triangle" || this.selectedshape === "rectangle"
-                   ||this.selectedshape === "pentagon" || this.selectedshape === "hexagon")
-      {
 
-<<<<<<< Updated upstream
-=======
->>>>>>> b3b6526346dad7f02d1c8c1b99374622f0d64afc
->>>>>>> Stashed changes
         Dimension = {
           start_X: startX,
           start_Y: startY,
@@ -289,42 +264,21 @@ export default {
        console.log("hello"+this.selectedshape);
       await axios.post(apiUrl + "/shape",data)
     },
-<<<<<<< Updated upstream
-=======
-<<<<<<< HEAD
-    async GetShapesData(){
-      await axios.get(apiUrl + "/shape").then(Response => {
-
-      // console.log("LENGTH"+Object.keys(Response.data).length)
+    async GetShapesData(para){
+      await axios.get(apiUrl + para).then(Response => {
+      console.log(Response.data)
+      console.log("LENGTH"+Object.keys(Response.data).length)
+      this.shapesData=[];
       for(let i =0 ;i < Object.keys(Response.data).length;i++){
-        console.log(Response.data[i])
+        console.log("RESPOSE"+Response.data[i])
         this.shapesData[i] = {
           id : Response.data[i].id,
           shapeType: Response.data[i].shapeType,
           jsondimensions: JSON.parse(JSON.stringify(Response.data[i].jsondimensions)),
           jsonproperties: JSON.parse(JSON.stringify(Response.data[i].jsonproperties))
         }
+      console.log(this.shapesData);
       }})
-      console.log(this.shapesData.length)
-
-=======
->>>>>>> Stashed changes
-    async GetShapesData(para){
-      await axios.get(apiUrl + para).then(Response => {
-        console.log(Response.data)
-        console.log("LENGTH"+Object.keys(Response.data).length)
-        this.shapesData=[];
-                for(let i =0 ;i < Object.keys(Response.data).length;i++){
-                  console.log("RESPOSE"+Response.data[i])
-                  this.shapesData[i] = {
-                    id : Response.data[i].id,
-                    shapeType: Response.data[i].shapeType,
-                    jsondimensions: JSON.parse(JSON.stringify(Response.data[i].jsondimensions)),
-                    jsonproperties: JSON.parse(JSON.stringify(Response.data[i].jsonproperties))
-                  }
-               console.log(this.shapesData);
-                }})
->>>>>>> b3b6526346dad7f02d1c8c1b99374622f0d64afc
     },
     async eraseShapes(){
       this.shapesData = []
