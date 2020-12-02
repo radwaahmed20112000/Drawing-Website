@@ -2,7 +2,7 @@
   <div class="shape">
 
     <color-bar msg="Color:" color="DE3163" key="color"></color-bar>
-    
+
     <span class="tab"></span>
     <label class="label_bar">Opacity: </label>
     <span class="space"></span>

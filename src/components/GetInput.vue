@@ -29,7 +29,7 @@ export default {
             range_div = document.getElementById(this.div_id);
         console.log(range.id,range_div.id);
 
-        if(range.style.opacity == "0")
+        if(range.style.opacity === "0")
         {
             range.style.opacity = "1";
             range_div.style.opacity = "1";
@@ -43,7 +43,7 @@ export default {
         changeRange()
         {
         var num = document.getElementById(this.num_id),
-            range = document.getElementById(this.range_id);      
+            range = document.getElementById(this.range_id);
         range.value = num.value;
         },
         changeNumber()

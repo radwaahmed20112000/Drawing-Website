@@ -2,7 +2,6 @@
   <div id="app">
     <Tools></Tools>
     <Canvas></Canvas>
-    <ToolsBar></ToolsBar>
 
   </div>
 </template>
@@ -11,7 +10,6 @@
 import Tools from './components/Tools.vue';
 //import ShapeBar from './components/ShapeBar.vue';
 //import LineBar from './components/LineBar.vue';
-import ToolsBar from './components/toolsBar.vue';
 import Canvas from './components/Canvas.vue';
 // import toolsBar from './components/toolsBar.vue'
 export default {
@@ -20,14 +18,14 @@ export default {
     Canvas,
     //ShapeBar,
     //LineBar,
-    ToolsBar,
     Tools,
   },
   data() {
-
+    return{
+    }
   },
   mounted() {
-
+    console.log(this.Canvas.data()); 
   },
   methods: {
   }

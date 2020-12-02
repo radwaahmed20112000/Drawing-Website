@@ -1,34 +1,34 @@
 <template>
-    <div id="toolBar">
-        <div id="appLogo">
-            <h1><span>i</span>nspire <i class="fa fa-paint-brush"></i></h1>
-            <h4>Best Drawing & Painting App</h4>
-        </div>
-        <div id="newDrawing" @click="drawRect"><i class="fa fa-plus"></i> New Drawing</div> 
-        <div id="open"><i class="fa fa-folder-open"></i> Open Drawing</div>
-        <div id="saveDrawing"><i class="fa fa-save"></i> Save Drawing
-            <ul id="saveList">
-                <li>Save as XMl file</li>
-                <li>Save as an image</li>
-                <li>Save as JSON file</li>
-            </ul>
-        </div>
-        <div id="edit"><i class="fa fa-edit"></i> Edit
-            <ul id="editList">
-                <li>Undo</li>
-                <li>Redo</li>
-                <li>Copy</li>
-                <li>Paste</li>
-            </ul>
-        </div>
+  <div id="toolBar">
+    <div id="appLogo">
+      <h1><span>i</span>nspire <i class="fa fa-paint-brush"></i></h1>
+      <h4>Best Drawing & Painting App</h4>
     </div>
+    <div id="newDrawing" @click="drawRect"><i class="fa fa-plus"></i> New Drawing</div>
+    <div id="open"><i class="fa fa-folder-open"></i> Open Drawing</div>
+    <div id="saveDrawing"><i class="fa fa-save"></i> Save Drawing
+      <ul id="saveList">
+        <li>Save as XMl file</li>
+        <li>Save as an image</li>
+        <li>Save as JSON file</li>
+      </ul>
+    </div>
+    <div id="edit"><i class="fa fa-edit"></i> Edit
+      <ul id="editList">
+        <li>Undo</li>
+        <li>Redo</li>
+        <li>Copy</li>
+        <li>Paste</li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
 export default {
   name: 'Tools',
   mounted() {
-    //NAVIGATION BAR SETTINGS : 
+    //NAVIGATION BAR SETTINGS :
     var saveDrawing = document.getElementById("saveDrawing");
     var saveList = document.getElementById("saveList");
     var edit = document.getElementById("edit");

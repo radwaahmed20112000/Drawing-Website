@@ -1,7 +1,7 @@
 <template>
   <div class="shape">
     <color-bar  msg="Line Color:" color="DE3163" id="LineColor" ></color-bar>
-
+    
     <span class="tab"></span>
     <label class="label_bar">Line Opacity: </label>
     <span class="space"></span>
