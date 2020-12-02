@@ -90,6 +90,7 @@ export default {
 
 
 
+
     },
     selectShape(e){
       if(!drawing) return;
@@ -183,8 +184,8 @@ export default {
       imageData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height)
     },
     async finishShape() {
-      console.log(this.selectedshape);
-      drawing = false
+      // console.log(this.selectedshape);
+      drawing = false;
       this.context.beginPath();
       if(!this.mousemoved) return;
       this.mousemoved = false;
@@ -196,6 +197,7 @@ export default {
           },
           Dimension;
       style = JSON.stringify(style);
+        console.log("yarab"+this.selectedshape);
       if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
         Dimension = {
           radiusX: this.radiusx,
@@ -207,10 +209,10 @@ export default {
             end_X : X,
             end_Y : Y
         }
-
-      } else if (this.selectedshape === "triangle" || this.selectedshape === "rectangle"||
-           this.selectedshape === "pentagon" || this.selectedshape === "hexagon")
-           {
+         
+      } else if (this.selectedshape === "triangle" || this.selectedshape === "rectangle"
+                   ||this.selectedshape === "pentagon" || this.selectedshape === "hexagon")
+      {
 
         Dimension = {
           start_X: startX,
@@ -349,6 +351,7 @@ export default {
       this.context.stroke();
       this.context.fill();
       this.context.beginPath();
+      this.mousemoved = true;
     },
     drawRect(e){
       if(!drawing &&!DrawingCanvasMode)
@@ -454,6 +457,7 @@ export default {
         this.context.fill();
       }
       this.context.stroke()
+      this.mousemoved = true;
     }	,
     drawShapeProgrammatically(id){
       let shape = this.shapesData[id]
