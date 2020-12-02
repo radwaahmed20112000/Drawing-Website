@@ -11,7 +11,6 @@
 import axios from 'axios';
 const apiUrl = "http://localhost:8085"
 import toolsBar from '@/components/toolsBar.vue'
-
 let drawing = false;
 let editing = false;
 let DrawingCanvasMode = false;
@@ -21,13 +20,11 @@ let imageData = null;
 let X = 0;
 let Y = 0;
 let NumberOfSides = 5;
-
 export default {
   name: "Canvas",
   components: {
     toolsBar
   },
-
   data(){
     return{
       // Shape :{
@@ -63,7 +60,6 @@ export default {
     // this.canvas.addEventListener("mousedown",this.startEdit)
     // this.canvas.addEventListener("mousemove",this.moveShape)
     // this.canvas.addEventListener("mouseup",this.finishEdit)
-
   },
   methods:{
     setshape(value){
@@ -118,7 +114,6 @@ export default {
       else if(this.selectedshape==="ellipse")
         this.drawEllipseEdit(e ,shape.x_radius,shape.y_radius, shape.x_center,shape.y_center );
     },
-
     /* General Canvas Methods */
     resizeCanvas() {
       this.toolBarHeight = document.getElementById("toolBar").offsetHeight
@@ -127,7 +122,6 @@ export default {
       this.selectCanvas.width = window.innerWidth
       this.selectCanvas.height = window.innerHeight-this.toolBarHeight
     },
-
     drawCanvas(){
       for(let i = 0 ; i < this.shapesData.length; i++ ){
         const shape = this.shapesData[i];
@@ -158,7 +152,6 @@ export default {
     finishEdit(){
       editing = false
       this.context.beginPath();
-
     },
     startShape(e){
       drawing = true
@@ -214,7 +207,6 @@ export default {
       X = e.offsetX
       Y = e.offsetY
     },
-
     /* Data Requests */
     async sendShapeData(Dimension, style) {
       let data = {
@@ -308,7 +300,6 @@ export default {
       const radius = eX - sX;
       const step = 2 * Math.PI / numberOfSides;
       const shift = (Math.PI / 180.0) * -18;
-
       for(let i = 0 ; i <= numberOfSides ; i++ ){
         var curStep = i * step + shift;
         this.context.lineTo( eX + radius * Math.cos(curStep) ,eY + radius * Math.sin(curStep));
@@ -322,7 +313,6 @@ export default {
       this.context.putImageData(imageData,0,0);
       const step = 2 * Math.PI / numberOfSides;
       const shift = (Math.PI / 180.0) * -18;
-
       for(let i = 0 ; i <= numberOfSides ; i++ ){
         const curStep = i * step + shift;
         this.context.lineTo( e.offsetX + radius * Math.cos(curStep) ,e.offsetY + radius * Math.sin(curStep));
@@ -331,7 +321,6 @@ export default {
       this.context.fill();
       this.context.beginPath();
     },
-
     drawRect(e, sX = startX, sY = startY , eX = X , eY = Y){
       if(!drawing &&!DrawingCanvasMode)
         return
@@ -346,7 +335,6 @@ export default {
       }
       this.context.strokeRect(sX,sY,width,height)
     },
-
     drawRectEdit(e, width, height){
       if(!editing)
         return
@@ -426,8 +414,6 @@ export default {
   margin: 0;
   /*border: darkgrey 2px solid;*/
   border: 3px solid black;
-
-
 }
 #canvasSelect{
   padding: 0;

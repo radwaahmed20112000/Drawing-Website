@@ -47,12 +47,10 @@ export default {
     });
     //End Navigation Bar
   },
-
 }
 </script>
 
 <style scoped>
-
 /*NAVIGATION BAR STYLING*/
 #toolBar {
   text-align: left;

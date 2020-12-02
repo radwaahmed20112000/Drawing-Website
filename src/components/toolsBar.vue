@@ -3,6 +3,8 @@
     <button  class="grid-item" id="tools"><span style='color:white;'>Tools</span> </button>
 
     <button   @click="$emit('setselectmode',true)" class="grid-item" id="select" title="select" >   <i class="material-icons">near_me</i> </button>
+    <button @click="$emit('setundo','undo')" class="grid-item" id="select" title="undo" >   <i  class="material-icons">replay</i> </button>
+    <button  @click="$emit('setundo','redo')" class="grid-item" id="select" title="redo" >   <i id="redo" class="material-icons">replay</i> </button>
     <button  class="grid-item" id="delete" title="delete" >   <i class="material-icons">delete</i> </button>
     <button  class="grid-item" id="copy" title="copy" >   <i class="material-icons">content_copy</i> </button>
     <button  class="grid-item" id="move" title="move" >   <i class="material-icons">content_cut</i> </button>
@@ -34,7 +36,6 @@ export default {
 
 
 <style scoped>
-
 .grid-container {
   position: absolute;
   width: 70px;
@@ -43,17 +44,18 @@ export default {
   margin-left: -18px;
   padding: 0;
 }
-
 .grid-item {
   background-color:#e6e6e6;
   border: 1px solid white;
   /*height: 40px;*/
   text-align: center;
 
-
 }
+#redo{
+  transform: rotate(90deg);
+}
+
 #tools{
   background-color: #595959;
 }
-
 </style>
