@@ -4,7 +4,7 @@
       <h1><span>i</span>nspire <i class="fa fa-paint-brush"></i></h1>
       <h4>Best Drawing & Painting App</h4>
     </div>
-    <div id="newDrawing" @click="drawRect"><i class="fa fa-plus"></i> New Drawing</div>
+    <div id="newDrawing" ><i class="fa fa-plus"></i> New Drawing</div>
     <div id="open"><i class="fa fa-folder-open"></i> Open Drawing</div>
     <div id="saveDrawing"><i class="fa fa-save"></i> Save Drawing
       <ul id="saveList">

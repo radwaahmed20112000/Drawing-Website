@@ -24,9 +24,6 @@ export default {
     return{
     }
   },
-  mounted() {
-    console.log(this.Canvas.data()); 
-  },
   methods: {
   }
 }
