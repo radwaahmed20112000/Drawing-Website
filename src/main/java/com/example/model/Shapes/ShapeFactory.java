@@ -3,7 +3,7 @@ import com.example.model.Shapes.EllipticalShapes.*;
 import com.example.model.Shapes.Polygons.*;
 
 public class ShapeFactory {
-    public Shape createShape(Shape shape){
+    public Shape createShape(Shape shape,long ID){
         System.out.println(shape.getJSONDimensions());
         if(shape.shapeType.equalsIgnoreCase("RECTANGLE"))
             shape = new Rectangle(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
@@ -19,6 +19,7 @@ public class ShapeFactory {
             shape = new Hexagon(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
         else if(shape.shapeType.equalsIgnoreCase("Triangle"))
             shape = new Triangle(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
+        shape.setID(ID);
         return shape;
     }
 

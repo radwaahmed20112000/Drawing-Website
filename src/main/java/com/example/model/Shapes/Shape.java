@@ -1,17 +1,53 @@
 package com.example.model.Shapes;
 
+import com.example.model.Canvas;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class Shape {
+public class Shape implements IShape{
     String dimensions;
     String shapeType;
     HashMap<String,String> JSONDimensions;
     HashMap<String,String> JSONProperties;
     String properties;
+    Canvas myCanvas = Canvas.getInstance();
+
+    public long getID() {
+        return ID;
+    }
+
+    public void setID(long ID) {
+        this.ID = ID;
+    }
+
+    @Override
+    public void createShape() {
+
+    }
+
+    @Override
+    public void updateShape() {
+        myCanvas.getShapes().put(ID,this);
+        //undo n redo
+    }
+
+    @Override
+    public void deleteShape() {
+    myCanvas.getShapes().remove(ID);
+    }
+
+    public void setJSONDimensions(HashMap<String, String> JSONDimensions) {
+        this.JSONDimensions = JSONDimensions;
+    }
+
+    public void setJSONProperties(HashMap<String, String> JSONProperties) {
+        this.JSONProperties = JSONProperties;
+    }
+
+    long ID;
 
     public Shape( HashMap<String,String>  JSONProperties,  HashMap<String,String>  JSONDimensions, String shapeType) {
         this.JSONProperties = JSONProperties;

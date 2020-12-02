@@ -30,9 +30,13 @@ public class Canvas {
 
     public void drawShape(Shape shape)
     {
-        Shape newShape = factory.createShape(shape);
+        Shape newShape = factory.createShape(shape,currentID);
         shapes.put(currentID, newShape);
         currentID++;
+    }
+    public void clearCanvas(){
+        getShapes().clear();
+        currentID = 0;
     }
 
 
