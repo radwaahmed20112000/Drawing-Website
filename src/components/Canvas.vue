@@ -46,7 +46,7 @@ export default {
       currentLineWidth:0,
       radiusx:0,
       radiusy:0,
-      currentShape : null
+      currentId : null
     }
   },
   mounted() {
@@ -62,7 +62,7 @@ export default {
     document.getElementById("move").addEventListener("click", ()=>{
       if(DrawingCanvasMode)
       {
-        this.currentShape = null;
+        this.currentId = null;
         this.canvas.addEventListener("mousedown",this.startShape)
         this.canvas.addEventListener("mousemove",this.selectShape)
         this.canvas.addEventListener("mouseup",this.finishShape)
@@ -110,8 +110,8 @@ export default {
       DrawingCanvasMode = true;
       this.selectedshape=value;
     },
-    moveShape(e,id=0){
-      this.drawShapeEdit(e,id);
+    moveShape(e){
+      this.drawShapeEdit(e,this.currentId);
     },
     drawShapeEdit(e,id=0){
       this.setshape(this.shapesData[id].shapeType)
@@ -518,7 +518,7 @@ export default {
       if(this.checkColor(e))
       {
         console.log("wrong");
-        this.currentShape = null;
+        this.currentId = null;
         return;
       }
       for(let i = this.shapesData.length - 1; i>=0; i--)
@@ -545,10 +545,10 @@ export default {
           console.log(i);
           this.selectContext.closePath();
           this.selectContext.clearRect(0,0,this.selectCanvas.width, this.selectCanvas.height);
-          this.currentShape = shape;
+          this.currentId = shape.id;
           return;
         }
-        this.currentShape = null;
+        this.currentId = null;
         this.selectContext.closePath();
         this.selectContext.clearRect(0,0,this.selectCanvas.width, this.selectCanvas.height);
       }
