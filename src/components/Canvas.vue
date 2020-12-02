@@ -10,10 +10,7 @@
 import axios from 'axios';
 const apiUrl = "http://localhost:8086"
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
-
-
 import toolsBar from '@/components/toolsBar.vue'
-
 let drawing = false;
 let editing = false;
 let DrawingCanvasMode = true;
@@ -22,13 +19,11 @@ let startY = 0;
 let imageData = null;
 let X = 0;
 let Y = 0;
-
 export default {
   name: "Canvas",
   components: {
     toolsBar
   },
-
   data(){
     return{
       canvas :null,
@@ -46,7 +41,7 @@ export default {
       currentLineWidth:0,
       radiusx:0,
       radiusy:0,
-      currentShape : null
+      currentId : null
     }
   },
   mounted() {
@@ -62,7 +57,7 @@ export default {
     document.getElementById("move").addEventListener("click", ()=>{
       if(DrawingCanvasMode)
       {
-        this.currentShape = null;
+        this.currentId = null;
         this.canvas.addEventListener("mousedown",this.startShape)
         this.canvas.addEventListener("mousemove",this.selectShape)
         this.canvas.addEventListener("mouseup",this.finishShape)
@@ -80,7 +75,6 @@ export default {
     this.canvas.addEventListener("mousedown",this.startShape)
     this.canvas.addEventListener("mousemove",this.selectShape)
     this.canvas.addEventListener("mouseup",this.finishShape)
-
   },
   methods:{
     selectShape(e){
@@ -100,7 +94,6 @@ export default {
         this.drawLine(e);
       else if(this.selectedshape==="ellipse")
         this.drawEllipse(e);
-
     },
     setselectmode(value)
     {
@@ -110,8 +103,8 @@ export default {
       DrawingCanvasMode = true;
       this.selectedshape=value;
     },
-    moveShape(e,id=0){
-      this.drawShapeEdit(e,id);
+    moveShape(e){
+      this.drawShapeEdit(e,this.currentId);
     },
     drawShapeEdit(e,id=0){
       this.setshape(this.shapesData[id].shapeType)
@@ -131,7 +124,6 @@ export default {
       // else if(this.selectedshape==="ellipse")
       //   this.drawEllipseEdit(e ,shape.x_radius,shape.y_radius, shape.x_center,shape.y_center );
     },
-
     /* General Canvas Methods */
     resizeCanvas() {
       let toolsBar= document.getElementById("toolsBar")
@@ -144,7 +136,6 @@ export default {
       this.selectCanvas.height = window.innerHeight-this.toolBarHeight-toolsBarWidth
       toolsBar.style.height = this.canvas.height
     },
-
     drawCanvas(id=0){
       this.canvas.addEventListener("mousemove",()=>{})
       DrawingCanvasMode = true
@@ -170,7 +161,6 @@ export default {
     finishEdit(){
       editing = false
       this.context.beginPath();
-
     },
     startShape(e){
       if(this.selectedshape === '') return;
@@ -226,12 +216,10 @@ export default {
       if(e) {
         startX = e.offsetX
         startY = e.offsetY
-
       }
       else{
         startX = x
         startY = y
-
       }
     },
     setEndCoordinates : function (e,x,y){
@@ -243,9 +231,7 @@ export default {
         X = x
         Y = y
       }
-
     },
-
     /* Data Requests */
     async sendShapeData(Dimension, style) {
       let data = {
@@ -334,7 +320,6 @@ export default {
       this.context.putImageData(imageData,0,0);
       const step = 2 * Math.PI / numberOfSides;
       const shift = (Math.PI / 180.0) * -18;
-
       for(let i = 0 ; i <= numberOfSides ; i++ ){
         const curStep = i * step + shift;
         this.context.lineTo( X + this.radiusx * Math.cos(curStep) ,Y + this.radiusx * Math.sin(curStep));
@@ -343,7 +328,6 @@ export default {
       this.context.fill();
       this.context.beginPath();
     },
-
     drawRect(e){
       if(!drawing &&!DrawingCanvasMode)
         return
@@ -360,7 +344,6 @@ export default {
       this.context.beginPath();
       this.mousemoved = true;
     },
-
     drawRectEdit(e, width, height){
       if(!editing)
         return
@@ -402,7 +385,6 @@ export default {
       }
       this.context.stroke();
     },*/
-
     /* Elliptical Shapes Drawing Methods */
     drawEllipse(e){
       if(!drawing && !DrawingCanvasMode){return}
@@ -414,7 +396,6 @@ export default {
         // const centreY = Math.abs(Y-this.radiusy);
         this.context.putImageData(imageData,0,0);
       }
-
       this.context.ellipse(startX,startY,this.radiusx,this.radiusy,Math.PI , 0 ,2 * Math.PI);
       this.context.stroke();
       if(this.fill){
@@ -439,7 +420,6 @@ export default {
       if(drawing === true ){
           this.setEndCoordinates(e)
       }
-
       this.context.putImageData(imageData,0,0);
       this.context.beginPath()
       if(!editing) {
@@ -448,7 +428,6 @@ export default {
       }
       else
         this.context.arc(X, Y, this.radiusx, 0, 2 * Math.PI)
-
       if(this.fill){
         this.context.fill();
       }
@@ -518,12 +497,11 @@ export default {
       if(this.checkColor(e))
       {
         console.log("wrong");
-        this.currentShape = null;
+        this.currentId = null;
         return;
       }
       for(let i = this.shapesData.length - 1; i>=0; i--)
       {
-
         const shape = this.shapesData[i];
         this.selectContext.beginPath();
         if(shape.type === "rectangle") this.rectSelected(shape.jsondimensions.start_X, shape.jsondimensions.start_Y,
@@ -545,10 +523,10 @@ export default {
           console.log(i);
           this.selectContext.closePath();
           this.selectContext.clearRect(0,0,this.selectCanvas.width, this.selectCanvas.height);
-          this.currentShape = shape;
+          this.currentId = shape.id;
           return;
         }
-        this.currentShape = null;
+        this.currentId = null;
         this.selectContext.closePath();
         this.selectContext.clearRect(0,0,this.selectCanvas.width, this.selectCanvas.height);
       }
@@ -614,8 +592,6 @@ export default {
   margin: 0;
   /*border: darkgrey 2px solid;*/
   border: 3px solid black;
-
-
 }
 #canvasSelect{
   padding: 0;

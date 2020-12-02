@@ -34,7 +34,6 @@ export default {
 
 
 <style scoped>
-
 .grid-container {
   position: absolute;
   width: 70px;
@@ -43,7 +42,6 @@ export default {
   margin-left: -18px;
   padding: 0;
 }
-
 .grid-item {
   background-color:#e6e6e6;
   border: 1px solid white;
@@ -55,5 +53,4 @@ export default {
 #tools{
   background-color: #595959;
 }
-
 </style>
