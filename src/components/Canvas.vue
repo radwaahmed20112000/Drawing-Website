@@ -196,7 +196,11 @@ export default {
           radiusX: this.radiusx,
           radiusY: this.radiusy,
           CenterX: Math.abs(startX),
-          CenterY: Math.abs(startY)
+          CenterY: Math.abs(startY),
+            start_X : startX,
+            start_Y : startY,
+            end_X : X,
+            end_Y : Y
         }
       } else if (this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
           || this.selectedshape === "triangle" || this.selectedshape === "rectangle") {
@@ -519,15 +523,23 @@ export default {
       }
       for(let i = this.shapesData.length - 1; i>=0; i--)
       {
+
         const shape = this.shapesData[i];
         this.selectContext.beginPath();
-        if(shape.type === "rectangle") this.rectSelected(shape.x_start, shape.y_start, shape.x_end, shape.y_end);
-        else if(shape.type === "circle" ) this.circleSelected(shape.x_start, shape.y_start, shape.x_end, shape.y_end, shape.x_radius);
-        else if(shape.type === "triangle") this.triangleSelected(shape.x_start, shape.y_start, shape.x_end, shape.y_end);
-        else if(shape.type === "ellipse") this.ellipseSelected(shape.x_end, shape.y_end, shape.x_radius ,shape.y_radius, shape.x_center, shape.y_center);
-        else if(shape.type === "pentagon") this.polygonSelected(5, shape.x_start, shape.y_start, shape.x_end, shape.y_end);
-        else if(shape.type === "hexagon") this.polygonSelected(6, shape.x_start, shape.y_start, shape.x_end, shape.y_end);
-        else if(shape.type === "line") this.lineSelected(shape.x_start, shape.y_start, shape.x_end, shape.y_end);
+        if(shape.type === "rectangle") this.rectSelected(shape.jsondimensions.start_X, shape.jsondimensions.start_Y,
+            shape.jsondimensions.end_X, shape.jsondimensions.end_Y);
+        else if(shape.type === "circle" ) this.circleSelected(shape.jsondimensions.start_X, shape.jsondimensions.start_Y,
+            shape.jsondimensions.end_X, shape.jsondimensions.end_Y, shape.jsondimensions.radiusX);
+        else if(shape.type === "triangle") this.triangleSelected(shape.jsondimensions.start_X, shape.jsondimensions.start_Y,
+            shape.jsondimensions.end_X, shape.jsondimensions.end_Y);
+        else if(shape.type === "ellipse") this.ellipseSelected(shape.shape.jsondimensions.end_X, shape.shape.jsondimensions.end_Y,
+            shape.jsondimensions.radiusX,shape.jsondimensions.radiusY,shape.jsondimensions.CenterX, shape.jsondimensions.CenterY);
+        else if(shape.type === "pentagon") this.polygonSelected(5, shape.jsondimensions.start_X, shape.jsondimensions.start_Y,
+            shape.jsondimensions.end_X, shape.jsondimensions.end_Y);
+        else if(shape.type === "hexagon") this.polygonSelected(6,shape.jsondimensions.start_X, shape.jsondimensions.start_Y,
+            shape.jsondimensions.end_X, shape.jsondimensions.end_Y);
+        else if(shape.type === "line") this.lineSelected(shape.jsondimensions.start_X, shape.jsondimensions.start_Y,
+            shape.jsondimensions.end_X, shape.jsondimensions.end_Y);
         if(this.selectContext.isPointInPath(e.offsetX , e.offsetY ))
         {
           console.log(i);
