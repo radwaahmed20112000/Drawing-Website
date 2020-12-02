@@ -28,26 +28,26 @@
 
 
 <script>
+
 export default {
   name: 'toolsBar',
-
 }
 </script>
 
 
 <style scoped>
+
 .grid-container {
   position: absolute;
   width: 70px;
   display: grid;
   grid-template-columns: auto ;
-  margin-left: -18px;
-  padding: 0;
 }
+
 .grid-item {
   background-color:#e6e6e6;
   border: 1px solid white;
-  /*height: 40px;*/
+  height: 40px;
   text-align: center;
 
 }
@@ -58,4 +58,5 @@ export default {
 #tools{
   background-color: #595959;
 }
+
 </style>
