@@ -2,7 +2,7 @@
   <div>
     <canvas id="canvasSelect"></canvas>
     <canvas id="Canvas" ></canvas>
-    <toolsBar id="toolsBar" @setshape="setshape"></toolsBar>
+    <toolsBar id="toolsBar" @setshape="setshape" @setundo="setUndoMode"></toolsBar>
   </div>
 </template>
 
@@ -77,6 +77,18 @@ export default {
     this.canvas.addEventListener("mouseup",this.finishShape)
   },
   methods:{
+    async setUndoMode(value){
+      
+       await this.GetShapesData("/"+value);
+       this.clearCanvas();
+       for(let i = 0 ; i < this.shapesData.length; i++ ){
+       
+        this.drawShapeProgrammatically(i)
+      }
+     
+      
+
+    },
     selectShape(e){
       if(!drawing) return;
       this.setEndCoordinates(e);
@@ -169,6 +181,7 @@ export default {
       imageData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height)
     },
     async finishShape() {
+      console.log(this.selectedshape);
       drawing = false
       this.context.beginPath();
       if(!this.mousemoved) return;
@@ -192,8 +205,11 @@ export default {
             end_X : X,
             end_Y : Y
         }
-      } else if (this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
-          || this.selectedshape === "triangle" || this.selectedshape === "rectangle") {
+         
+      } else if (this.selectedshape === "triangle" || this.selectedshape === "rectangle"||
+           this.selectedshape === "pentagon" || this.selectedshape === "hexagon")
+           {
+           
         Dimension = {
           start_X: startX,
           start_Y: startY,
@@ -203,7 +219,7 @@ export default {
       }
       Dimension = JSON.stringify(Dimension);
       await this.sendShapeData(Dimension, style);
-      await this.GetShapesData();
+      await this.GetShapesData("/shape");
     },
     setShapeAttributes(lineColor,fillColor,lineOpacity,fill){
       this.context.lineWidth = lineOpacity;
@@ -234,25 +250,29 @@ export default {
     },
     /* Data Requests */
     async sendShapeData(Dimension, style) {
+     
       let data = {
         shapeType: this.selectedshape,
         dimensions: Dimension,
         properties: style
       }
+       console.log("hello"+this.selectedshape);
       await axios.post(apiUrl + "/shape",data)
     },
-    async GetShapesData(){
-      await axios.get(apiUrl + "/shape").then(Response => {
+    async GetShapesData(para){
+      await axios.get(apiUrl + para).then(Response => {
         console.log(Response.data)
         console.log("LENGTH"+Object.keys(Response.data).length)
+        this.shapesData=[];
                 for(let i =0 ;i < Object.keys(Response.data).length;i++){
                   console.log("RESPOSE"+Response.data[i])
                   this.shapesData[i] = {
+                    id : Response.data[i].id,
                     shapeType: Response.data[i].shapeType,
                     jsondimensions: JSON.parse(JSON.stringify(Response.data[i].jsondimensions)),
                     jsonproperties: JSON.parse(JSON.stringify(Response.data[i].jsonproperties))
                   }
-               //   console.log(this.shapesData)
+               console.log(this.shapesData);
                 }})
     },
     async eraseShapes(){
@@ -435,6 +455,7 @@ export default {
     }	,
     drawShapeProgrammatically(id){
       let shape = this.shapesData[id]
+      console.log(shape.shapeType);
       let shapeType = shape.shapeType
       if(shapeType==="circle"||shapeType==="ellipse") {
         this.setStartCoordinates(null, shape.jsondimensions.CenterX, shape.jsondimensions.CenterY)
@@ -449,15 +470,15 @@ export default {
         this.setStartCoordinates(null, shape.jsondimensions.start_X, shape.jsondimensions.start_Y)
         this.setEndCoordinates(null, shape.jsondimensions.end_X, shape.jsondimensions.end_Y)
         this.radiusx = X-startX
-        if(this.selectedshape==="pentagon")
+        if(shapeType==="pentagon")
           this.drawPolygon(5,null);
-        else if(this.selectedshape==="rectangle")
+        else if(shapeType==="rectangle")
           this.drawRect(null );
-        else if(this.selectedshape==="triangle")
+        else if(shapeType==="triangle")
           this.drawTriangle(null);
-        else if(this.selectedshape==="hexagon")
+        else if(shapeType==="hexagon")
           this.drawPolygon(6,null);
-        else if(this.selectedshape==="line")
+        else if(shapeType==="line")
           this.drawLine(null);
       }
       this.context.beginPath()
