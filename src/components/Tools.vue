@@ -57,7 +57,6 @@ export default {
 #toolBar {
   text-align: left;
   background-color: black;
-  color: black;
   font-weight: 600;
   font-size: 15px;
   padding: 12px;
@@ -79,9 +78,9 @@ export default {
   display: inline-block;
 }
 #appLogo h1{
-  font-family: 'Jasmina FY';
+  font-family: 'Jasmina FY',serif;
   display: inline-block;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   margin-top: 10px;
   font-size: 40px;
 }
@@ -93,7 +92,7 @@ export default {
 }
 #appLogo h4 {
   font-size: 15px;
-  font-family: 'Jasmina FY';
+  font-family: 'Jasmina FY',serif;
   margin-top: 5px;
 }
 #saveDrawing ul, #edit ul{

@@ -40,7 +40,7 @@ export default {
   width: 70px;
   display: grid;
   grid-template-columns: auto ;
-  margin: 0;
+  margin-left: -18px;
   padding: 0;
 }
 
