@@ -58,6 +58,7 @@ export default {
     window.addEventListener('resize',() => {
       this.resizeCanvas()
     })
+    this.eraseShapes()
     document.getElementById("move").addEventListener("click", ()=>{
       if(DrawingCanvasMode)
       {
@@ -266,6 +267,7 @@ export default {
     },
     async eraseShapes(){
       this.shapesData = []
+      this.clearCanvas()
      const response =  await axios.delete(apiUrl + "/shapes")
       console.log("OOO"+response.data)
     },
