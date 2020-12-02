@@ -3,8 +3,8 @@
     <button  class="grid-item" id="tools"><span style='color:white;'>Tools</span> </button>
 
     <button   @click="$emit('setselectmode',true)" class="grid-item" id="select" title="select" >   <i class="material-icons">near_me</i> </button>
-    <button @click="$emit('setundo','undo')" class="grid-item" id="select" title="undo" >   <i  class="material-icons">replay</i> </button>
-    <button  @click="$emit('setundo','redo')" class="grid-item" id="select" title="redo" >   <i id="redo" class="material-icons">replay</i> </button>
+    <button @click="$emit('setundo','undo')" class="grid-item" id="undo" title="undo" >   <i  class="material-icons">replay</i> </button>
+    <button  @click="$emit('setundo','redo')" class="grid-item" id="redo" title="redo" >   <i  class="material-icons">replay</i> </button>
     <button  class="grid-item" id="delete" title="delete" >   <i class="material-icons">delete</i> </button>
     <button  class="grid-item" id="copy" title="copy" >   <i class="material-icons">content_copy</i> </button>
     <button  class="grid-item" id="move" title="move" >   <i class="material-icons">content_cut</i> </button>
