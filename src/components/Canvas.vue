@@ -8,13 +8,15 @@
 
 <script>
 import axios from 'axios';
-const apiUrl = "http://localhost:8088"
+const apiUrl = "http://localhost:8089"
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 import toolsBar from '@/components/toolsBar.vue'
 let drawing = false;
 let Selected = false;
 let Moving = false;
 let Resizing = false
+let Copying = false
+let Deleting = false
 let Dimension = {};
 let style = {};
 let DrawingCanvasMode = false;
@@ -47,6 +49,8 @@ export default {
       radiusy:0,
       currentId : null,
       currentShape:null,
+      width:0,
+      height:0
     }
   },
   mounted() {
@@ -66,11 +70,18 @@ export default {
     document.getElementById("move").addEventListener("click",()=> {
       Moving = true
     })
+    document.getElementById("copy").addEventListener("click",()=> {
+      Copying = true
+    })
     document.getElementById("resize").addEventListener("click",()=> {
       Resizing = true
     })
+    document.getElementById("delete").addEventListener("click",()=>{
+      Deleting = true
+    });
+
     this.canvas.addEventListener("mousedown", async (e)=> {
-      if(Moving){//andmove
+      if(Moving||Copying||Deleting){//andmove
         await this.select(e)
         this.startEdit(e)
       }
@@ -82,7 +93,7 @@ export default {
         this.startShape(e);
     });
   this.canvas.addEventListener("mousemove", (e)=>{
-      if(Moving)//andmove
+      if(Moving||Copying)//andmove
         this.moveShape(e);
       else if(Resizing)
         this.resizeShape(e);
@@ -90,13 +101,15 @@ export default {
         this.selectShape(e);
     });
     this.canvas.addEventListener("mouseup", (e)=> {
-      if(Moving && Selected)
+      if((Moving||Copying) && Selected)
         this.finishEdit(e);
-      else
+      else if (drawing)
         this.finishShape(e);
+      else if(Deleting)
+        this.deleteShape()
     });
 
-    document.getElementById("delete").addEventListener("click",this.eraseShapes);
+
   },
   methods:{
     async setUndoMode(value){
@@ -127,6 +140,8 @@ export default {
         this.drawLine(e);
       else if(this.selectedshape==="ellipse")
         this.drawEllipse(e);
+      else if(this.selectedshape==="sketch")
+        this.sketch(e);
     },
     setselectmode()
     {
@@ -136,6 +151,8 @@ export default {
     setshape(value){
       this.selectedshape=value;
       Moving = false
+      Copying = false
+      Deleting = false
     },
     moveShape(e){
       if(!Selected) return;
@@ -180,11 +197,12 @@ export default {
      console.log("ALOOOO"+this.shapesData.length)
       this.clearCanvas()
       for(let i = 0 ; i < this.shapesData.length; i++ ){
-        if(this.shapesData[i].id === id)
+        if(this.shapesData[i].id === id &&!Copying )
           continue
         this.drawShapeProgrammatically(i)
       }
       imageData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height)
+      if(!Deleting)
       this.drawShapeProgrammatically(this.currentId)
       DrawingCanvasMode = false
     },
@@ -200,7 +218,10 @@ export default {
       Selected = false
       this.context.beginPath();
       imageData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height)
+      if(Moving)
       this.updateShape("move")
+      else if(Copying)
+        this.updateShape("copy")
     },
     startShape(e){
       if(this.selectedshape === '') return;
@@ -263,6 +284,8 @@ export default {
        
         this.setStartCoordinates(shape.jsondimensions.start_X,shape.jsondimensions.start_Y)
         this.setEndCoordinates(shape.jsondimensions.end_X,shape.jsondimensions.end_Y)
+        this.width = Math.abs(shape.jsondimensions.start_X-shape.jsondimensions.end_X)
+        this.height = Math.abs(shape.jsondimensions.start_Y-shape.jsondimensions.end_Y)
       }
 
     },
@@ -308,39 +331,64 @@ export default {
     },
     async GetShapesData(para){
       await axios.get(apiUrl + para).then(Response => {
-       console.log("HELLO BABA " + Response.data)
+      // console.log("HELLO BABA " + Response.data)
         //console.log("LENGTH"+Object.keys(Response.data).length)
         this.shapesData=[];
-        for(let i =0 ;i < Object.keys(Response.data).length;i++){
-         // console.log("RESPOSE"+Response.data[i])
+        // for(let i =0 ;i < Object.keys(Response.data).length;i++) {
+        //   // console.log("RESPOSE"+Response.data[i])
+        //   this.shapesData[i] = {
+        //     id: Response.data[i].id,
+        //     shapeType: Response.data[i].shapeType,
+        //     jsondimensions: JSON.parse(JSON.stringify(Response.data[i].jsondimensions)),
+        //     jsonproperties: JSON.parse(JSON.stringify(Response.data[i].jsonproperties))
+        //   }
+        // }
+        let indeces = Object.keys(Response.data)
+        console.log(length)
+        for(let i =0 ;i <indeces.length;i++){
+         console.log(Response.data[indeces[i]])
           this.shapesData[i] = {
-            id : Response.data[i].id,
-            shapeType: Response.data[i].shapeType,
-            jsondimensions: JSON.parse(JSON.stringify(Response.data[i].jsondimensions)),
-            jsonproperties: JSON.parse(JSON.stringify(Response.data[i].jsonproperties))
-          }
-       //   console.log(this.shapesData);
-        }})
+            id : Response.data[indeces[i]].id,
+            shapeType: Response.data[indeces[i]].shapeType,
+            jsondimensions: JSON.parse(JSON.stringify(Response.data[indeces[i]].jsondimensions)),
+            jsonproperties: JSON.parse(JSON.stringify(Response.data[indeces[i]].jsonproperties))
+         }
+       }
+    })
     },
 
     async updateShape(state){
     //  this.setDimensions()
-      const respnse = await axios.get(apiUrl+"/copymove",{params:{
-          dimensions  : {
-            radiusX: this.radiusx,
-            radiusY: this.radiusy,
-            CenterX: Math.abs(X),
-            CenterY: Math.abs(Y),
-            start_X : X,
-            start_Y : Y,
-            end_X : parseFloat(X)+parseFloat(this.radiusx),
-            end_Y : parseFloat(Y)+parseFloat(this.radiusy),
-    },
+   //   console.log("HI ANA WIDTH"+this.width+" "+ this.height)
+      this.selectedshape = this.currentShape.shapeType
+      if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
+        Dimension = {
+          radiusX: this.radiusx,
+          radiusY: this.radiusy,
+          CenterX: Math.abs(X),
+          CenterY: Math.abs(Y),
+          start_X : X,
+          start_Y : Y,
+          end_X : parseFloat(X)+parseFloat(this.radiusx),
+          end_Y : parseFloat(Y)+parseFloat(this.radiusy),
+        }
+      }
+      else if (this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
+          || this.selectedshape === "triangle" || this.selectedshape === "rectangle" || this.selectedshape === "line") {
+        Dimension = {
+          start_X: X,
+          start_Y: Y,
+          end_X: parseFloat(X)+parseFloat(this.width),
+          end_Y: parseFloat(Y)+parseFloat(this.height),
+        }
+      }
+      await axios.get(apiUrl+"/copymove",{params:{
+          dimensions  : Dimension,
           id:encodeURIComponent(this.currentId),
           state:encodeURIComponent(state)
         }
     })
-      console.log("HELLO MAMA "+ respnse)
+     // console.log("HELLO MAMA "+ respnse)
       await this.GetShapesData("/"+"shape")
 
     //     params:{
@@ -354,8 +402,13 @@ export default {
     async eraseShapes(){
       this.shapesData = []
       this.clearCanvas()
-      const response =  await axios.delete(apiUrl + "/shapes")
-      console.log("OOO"+response.data)
+       await axios.delete(apiUrl + "/shapes")
+    //  console.log("OOO"+response.data)
+    },
+    async deleteShape(){
+      const response =  await axios.get(apiUrl + "/delete",{ params: {id: this.currentId } })
+      await this.GetShapesData("/shape");
+      console.log(JSON.stringify(response))
     },
     /* Free Sketching Methods */
     startSketch : function(e){
@@ -448,6 +501,8 @@ export default {
       if(this.fill){
         this.context.fill();
       }
+      // this.width = width
+      // this.height = height
       this.setEndCoordinates(e)
       this.context.strokeRect(X,Y,width,height);
       this.context.beginPath();
@@ -467,22 +522,24 @@ export default {
       this.context.stroke();
       this.context.beginPath();
       this.mousemoved = true;
+
     },
-    /*drawLineEdit() // needs editing
-    {
-      if(!editing)
-        return
-      this.context.putImageData(imageData,0,0)
-      if(this.fill){
-        this.context.fill();
-      }
-      this.context.moveTo(e.offsetX, e.offsetY);
-      this.context.lineTo(X, Y);
-      if(this.fill){
-        this.context.fill();
-      }
-      this.context.stroke();
-    },*/
+    // drawLineEdit() // needs editing
+    //طب يا سيدي شكرا
+    // {
+    //   if(!Moving)
+    //     return
+    //   this.context.putImageData(imageData,0,0)
+    //   if(this.fill){
+    //     this.context.fill();
+    //   }
+    //   this.context.moveTo(e.offsetX, e.offsetY);
+    //   this.context.lineTo(X, Y);
+    //   if(this.fill){
+    //     this.context.fill();
+    //   }
+    //   this.context.stroke();
+    // },
     /* Elliptical Shapes Drawing Methods */
     drawEllipse(e){
       if(!drawing && !DrawingCanvasMode){return}
@@ -538,12 +595,13 @@ export default {
       this.context.stroke()
     },
     drawShapeProgrammatically(id){
+      // let shape = this.currentShape
       let shape = this.shapesData[id]
       if(!shape){
-        console.log("NULL YALAAAA")
+      //  console.log("NULL YALAAAA")
         return
       }
-      console.log(shape.shapeType);
+     // console.log(shape.shapeType);
       let shapeType = shape.shapeType
       if(shapeType==="circle"||shapeType==="ellipse") {
         this.setStartCoordinates(null, shape.jsondimensions.CenterX, shape.jsondimensions.CenterY)
