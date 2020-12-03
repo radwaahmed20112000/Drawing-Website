@@ -78,9 +78,10 @@ public class Controller {
 
     @CrossOrigin
     @RequestMapping("/delete")
-    public String delete(@RequestParam(value = "id") String id) {
+    public String delete(@RequestParam(value = "id") String id) throws CloneNotSupportedException {
         long idL = Long.parseLong(id);
         Shape shape = myCanvas.getShapes().get(idL);
+        myCanvas.undoDeletion(shape);
         shape.deleteShape();
         System.out.println("BLABLA" + myCanvas.getShapes().size());
         return "RECEIVE";

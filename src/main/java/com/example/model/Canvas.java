@@ -43,8 +43,7 @@ public class Canvas {
     {
         Shape newShape = factory.createShape(shape,currentID);
         shapes.put(currentID, newShape);
-        myUndo.addShape(newShape);
-        System.out.println(myUndo.getUndo().size());
+        addToUndoStack(newShape);
         currentID++;
     }
     public void clearCanvas(){
@@ -52,25 +51,57 @@ public class Canvas {
         currentID = 0;
     }
 
+
+    public void addToUndoStack(Shape newShape){
+        myUndo.addShape(newShape);
+    }
     public void undoCanvas(){
+        Shape removedShape= myUndo.undoShape();
+        //System.out.println(removedShape.getShapeState()+"ttttt");
+        if(removedShape!=null){
+            if(removedShape.getShapeState().equalsIgnoreCase("created")){
+                shapes.remove(removedShape.getID());
+                currentID--;
 
-       Shape removedShape= myUndo.undoShape();
-       if(removedShape!=null){
-           shapes.remove(removedShape.getID());
-           currentID--;
-       }
-
-
+            }
+            else if(removedShape.getShapeState().equalsIgnoreCase("deleted")){
+                //removedShape.setID(currentID);
+                shapes.put(removedShape.getID(), removedShape);
+                //currentID++;
+            }
+            else if(removedShape.getShapeState().equalsIgnoreCase("Edit")){
+                shapes.put(removedShape.getID(),removedShape);
+            }
+        }
     }
 
-    public void redoCanvas(){
 
+    public void redoCanvas(){
         Shape removedShape= myUndo.redoShape();
+       // System.out.println(removedShape.getShapeState());
+
         if(removedShape!=null) {
-            removedShape.setID(currentID);
-            shapes.put(currentID, removedShape);
-            currentID++;
+            if(removedShape.getShapeState().equalsIgnoreCase("deleted")){
+                shapes.remove(removedShape.getID());
+                currentID--;
+            }
+            else if(removedShape.getShapeState().equalsIgnoreCase("created")){
+                removedShape.setID(currentID);
+                shapes.put(currentID, removedShape);
+                currentID++;
+            }
+            else if(removedShape.getShapeState().equalsIgnoreCase("AfterEdit")){
+                shapes.put(removedShape.getID(),removedShape);
+            }
         }
+    }
+
+    public void undoDeletion(Shape shape) throws CloneNotSupportedException {
+        Shape newShape=(Shape) shape.clone();
+        newShape.setShapeState("deleted");
+        myUndo.addShape(newShape);
+        System.out.println(myUndo.getUndo().size());
+
 
     }
 

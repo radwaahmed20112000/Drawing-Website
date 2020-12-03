@@ -20,6 +20,7 @@ public class ShapeFactory {
         else if(shape.shapeType.equalsIgnoreCase("Triangle"))
             shape = new Triangle(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
         shape.setID(ID);
+        shape.setShapeState("created");
         return shape;
     }
 
