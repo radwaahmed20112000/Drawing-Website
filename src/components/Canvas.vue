@@ -62,9 +62,9 @@ export default {
     window.addEventListener('resize',() => {
       this.resizeCanvas()
     })
-    this.rgbaCanvas = this.getCanvasRgba();
     this.eraseShapes()
     this.rgbaCanvas = this.getCanvasRgba();
+    console.log(this.rgbaCanvas);
     /***************/
     document.getElementById("move").addEventListener("click",()=> {
       this.resetState()
@@ -368,7 +368,7 @@ export default {
         //   }
         // }
         let indeces = Object.keys(Response.data)
-        console.log(length)
+        //console.log(length)
         for(let i =0 ;i <indeces.length;i++){
          console.log(Response.data[indeces[i]])
           this.shapesData[i] = {
@@ -480,6 +480,7 @@ export default {
       if(this.fill){
         this.context.fill();
       }
+      this.setEndCoordinates(e);
       this.context.beginPath();
       this.context.stroke();
     },
@@ -661,10 +662,10 @@ export default {
     /****SELECTION****/
     checkColor(e)
     {
-      const rgbaClick = this.getRGBA(e, true);
-      const bool = (JSON.stringify(this.rgbaCanvas).localeCompare(JSON.stringify(rgbaClick)));
-      console.log(bool)
-      return bool === "-1";
+      const rgbaClick = this.getRGBA(e);
+      console.log(rgbaClick);
+      const bool = (JSON.stringify(this.rgbaCanvas) === (JSON.stringify(rgbaClick)));
+      return bool;
     },
     getRGBA(e)
     {
@@ -726,11 +727,11 @@ export default {
           console.log("Selected   " + shape.id)
           return;
         }
-        console.log("not Selected")
         this.currentId = null;
         this.selectContext.closePath();
         this.selectContext.clearRect(0,0,this.selectCanvas.width, this.selectCanvas.height);
       }
+      console.log("not Selected")
     },
     rectSelected( x, y, xe, ye)
     {
@@ -742,7 +743,7 @@ export default {
     },
     circleSelected( x, y, xe, ye, r)
     {
-      this.selectContext.setTransform(1.3, 0, 0, 1.3, -xe*0.27, -ye*0.3);
+      this.selectContext.setTransform(1.2, 0, 0, 1.2, -xe*0.14, -ye*0.18);
       this.selectContext.arc(x,y,r,0, 2*Math.PI);
       this.selectContext.fill();
     },
@@ -773,7 +774,6 @@ export default {
         this.selectContext.lineTo( xe + radius * Math.cos(curStep) ,ye + radius * Math.sin(curStep));
       }
       this.selectContext.fill();
-      this.selectContext.stroke()
     },
     lineSelected(x, y, xe, ye)
     {
