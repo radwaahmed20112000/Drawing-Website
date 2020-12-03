@@ -4,16 +4,17 @@ import com.example.model.Canvas;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Shape implements IShape{
+public abstract class Shape implements IShape,Cloneable, Serializable {
     String dimensions;
     String shapeType;
     HashMap<String,String> JSONDimensions;
     HashMap<String,String> JSONProperties;
     String properties;
-    Canvas myCanvas = Canvas.getInstance();
+    protected Canvas myCanvas = Canvas.getInstance();
 
     public long getID() {
         return ID;
@@ -21,6 +22,27 @@ public class Shape implements IShape{
 
     public void setID(long ID) {
         this.ID = ID;
+    }
+
+    @Override
+    public void move(String dimensions, String id){
+        Shape shape = (Shape) this.myCanvas.getShapes().get(id);
+        HashMap<String,String> dimension = this.fromJsonToMap(dimensions);
+        shape.setJSONDimensions(dimension);
+    }
+
+    @Override
+    public void copy(String dimensions, String id) throws CloneNotSupportedException {
+        Shape shape = (Shape) this.myCanvas.getShapes().get(id).clone();
+        shape.setID(myCanvas.getCurrentID());
+        myCanvas.setCurrentID();
+        HashMap<String, String> dimension = this.fromJsonToMap(dimensions);
+        shape.setJSONDimensions(dimension);
+        myCanvas.getShapes().put(shape.getID(), shape);
+    }
+
+    public Object clone()throws CloneNotSupportedException{
+        return super.clone();
     }
 
     @Override

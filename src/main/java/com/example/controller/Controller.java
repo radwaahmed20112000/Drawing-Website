@@ -1,6 +1,8 @@
 package com.example.controller;
 
 import com.example.model.Canvas;
+import com.example.model.Shapes.EllipticalShapes.EllipticalShapes;
+import com.example.model.Shapes.Polygons.Polygons;
 import com.example.model.Shapes.Shape;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -35,17 +37,40 @@ public class Controller {
         return shape;
     }
     @CrossOrigin
+    @PostMapping("/copymove")
+    public void CopyMove(@RequestParam(value = "dimensions") String dimension ,@RequestParam(value = "id") String id,@RequestParam(value = "state")String state) throws CloneNotSupportedException {
+        Shape shape = myCanvas.getShapes().get(id);
+        if(state.equalsIgnoreCase("move")){
+            shape.move(dimension,id);
+        }else if(state.equalsIgnoreCase("copy")){
+            shape.copy(dimension,id);
+        }
+
+    }
+    @CrossOrigin
     @RequestMapping("/shape")
     @ResponseBody
     public Map<Long, Shape> getAllShapes (){
         return myCanvas.getShapes();
     }
-    @CrossOrigin
-    @PutMapping("/shape")
-    public Shape updateShape(@RequestBody Shape shape){
-        shape.updateShape();
+
+   /* @CrossOrigin
+    @PutMapping("/copymove")
+    public Shape MoveShape(@RequestParam(value = "operation") String operation,@RequestParam(value = "id") String id ,@RequestParam(value ="sX") String start_X ,
+                             @RequestParam(value = "sY" ) String start_y,@RequestParam(value ="eX") String end_X , @RequestParam(value = "eY" ) String end_Y ){
+
+        Shape shape = myCanvas.getShapes().get(id);
+        shape.move(start_X,start_y,end_X,end_Y);
         return shape;
     }
+    @CrossOrigin
+    @PutMapping("/Resize")
+    public Shape updateShape(@RequestParam(value = "id") String id ,@RequestParam(value ="sX") String start_X , @RequestParam(value = "eY" ) String start_y ){
+
+        Shape shape = myCanvas.getShapes().get(id);
+        shape.move(start_X,start_y,end_X,end_Y);
+        return shape;
+    }*/
 
     @CrossOrigin
     @DeleteMapping("/shapes")

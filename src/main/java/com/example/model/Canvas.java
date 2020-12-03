@@ -13,6 +13,14 @@ public class Canvas {
     private static Canvas canvas;
     private long currentID = 0;
 
+    public long getCurrentID() {
+        return currentID;
+    }
+
+    public void setCurrentID() {
+        this.currentID = currentID + 1;
+    }
+
     private Canvas(){
         shapes = new HashMap<Long, Shape>();
         factory = new ShapeFactory();
