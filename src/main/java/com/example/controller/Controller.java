@@ -62,29 +62,28 @@ public class Controller {
         return myCanvas.getShapes();
     }
 
-   /* @CrossOrigin
-    @PutMapping("/copymove")
-    public Shape MoveShape(@RequestParam(value = "operation") String operation,@RequestParam(value = "id") String id ,@RequestParam(value ="sX") String start_X ,
-                             @RequestParam(value = "sY" ) String start_y,@RequestParam(value ="eX") String end_X , @RequestParam(value = "eY" ) String end_Y ){
-
-        Shape shape = myCanvas.getShapes().get(id);
-        shape.move(start_X,start_y,end_X,end_Y);
-        return shape;
-    }
-    @CrossOrigin
-    @PutMapping("/Resize")
-    public Shape updateShape(@RequestParam(value = "id") String id ,@RequestParam(value ="sX") String start_X , @RequestParam(value = "eY" ) String start_y ){
-
-        Shape shape = myCanvas.getShapes().get(id);
-        shape.move(start_X,start_y,end_X,end_Y);
-        return shape;
-    }*/
-
     @CrossOrigin
     @DeleteMapping("/shapes")
     public int deleteShape (){
         myCanvas.clearCanvas();
         return myCanvas.getShapes().size();
+    }
+    /*
+    @CrossOrigin
+    @DeleteMapping("/shape/{id}")
+    public int deleteShape (@PathVariable Long id){
+        myCanvas.getShapes().get(id).deleteShape();
+        return myCanvas.getShapes().size();
+    }*/
+
+    @CrossOrigin
+    @RequestMapping("/delete")
+    public String delete(@RequestParam(value = "id") String id) {
+        long idL = Long.parseLong(id);
+        Shape shape = myCanvas.getShapes().get(idL);
+        shape.deleteShape();
+        System.out.println("BLABLA" + myCanvas.getShapes().size());
+        return "RECEIVE";
     }
 
     @CrossOrigin
