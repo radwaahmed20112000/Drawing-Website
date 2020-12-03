@@ -289,7 +289,7 @@ export default {
     },
     async GetShapesData(para){
       await axios.get(apiUrl + para).then(Response => {
-      //  console.log(Response.data)
+       console.log("HELLO BABA " + Response.data)
         //console.log("LENGTH"+Object.keys(Response.data).length)
         this.shapesData=[];
         for(let i =0 ;i < Object.keys(Response.data).length;i++){
@@ -304,13 +304,16 @@ export default {
         }})
     },
     async updateShape(state){
-      const respnse = await axios.put(apiUrl+"/copymove",{params:{
-          dimensions  :JSON.stringify(this.shapesData[this.currentId].jsondimensions),
-          id:this.currentId,
-          state:state
+      const respnse = await axios.get(apiUrl+"/copymove",{params:{
+          dimensions  : {
+
+    },
+          id:encodeURIComponent(this.currentId),
+          state:encodeURIComponent(state)
         }
     })
       console.log("HELLO MAMA "+ respnse)
+      await this.GetShapesData("/"+"shape")
 
     //     params:{
     //       id: this.currentId,
@@ -508,6 +511,10 @@ export default {
     },
     drawShapeProgrammatically(id){
       let shape = this.shapesData[id]
+      if(!shape){
+        console.log("NULL YALAAAA")
+        return
+      }
       console.log(shape.shapeType);
       let shapeType = shape.shapeType
       if(shapeType==="circle"||shapeType==="ellipse") {
