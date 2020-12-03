@@ -8,7 +8,7 @@
 
 <script>
 import axios from 'axios';
-const apiUrl = "http://localhost:8087"
+const apiUrl = "http://localhost:8088"
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 import toolsBar from '@/components/toolsBar.vue'
 let drawing = false;
@@ -62,7 +62,6 @@ export default {
     this.eraseShapes()
     this.rgbaCanvas = this.getCanvasRgba();
 
-
     /***************/
     document.getElementById("move").addEventListener("click",()=> {
       Moving = true
@@ -91,7 +90,7 @@ export default {
         this.selectShape(e);
     });
     this.canvas.addEventListener("mouseup", (e)=> {
-      if(Moving)
+      if(Moving && Selected)
         this.finishEdit(e);
       else
         this.finishShape(e);
@@ -233,10 +232,10 @@ export default {
         Dimension = {
           radiusX: this.radiusx,
           radiusY: this.radiusy,
-          CenterX: Math.abs(X),
-          CenterY: Math.abs(Y),
-          start_X : X,
-          start_Y : Y,
+          CenterX: Math.abs(startX),
+          CenterY: Math.abs(startY),
+          start_X : startX,
+          start_Y : startY,
           end_X : X,
           end_Y : Y
         }
@@ -325,10 +324,18 @@ export default {
     },
 
     async updateShape(state){
-      this.setDimensions()
-      
+    //  this.setDimensions()
       const respnse = await axios.get(apiUrl+"/copymove",{params:{
-          dimensions  : JSON.stringify(Dimension),
+          dimensions  : {
+            radiusX: this.radiusx,
+            radiusY: this.radiusy,
+            CenterX: Math.abs(X),
+            CenterY: Math.abs(Y),
+            start_X : X,
+            start_Y : Y,
+            end_X : parseFloat(X)+parseFloat(this.radiusx),
+            end_Y : parseFloat(Y)+parseFloat(this.radiusy),
+    },
           id:encodeURIComponent(this.currentId),
           state:encodeURIComponent(state)
         }
@@ -605,7 +612,7 @@ export default {
       for(let i = this.shapesData.length - 1; i>=0; i--)
       {
         const shape = this.shapesData[i];
-        console.log(shape)
+        console.log("ELCNAVAS EL5AFEYYA"+JSON.stringify(shape.jsondimensions))
         this.selectContext.beginPath();
         if(shape.shapeType === "rectangle") {
           this.rectSelected(shape.jsondimensions.start_X, shape.jsondimensions.start_Y,shape.jsondimensions.end_X, shape.jsondimensions.end_Y);
