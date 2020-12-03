@@ -11,6 +11,9 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.Map;
 
 @Configuration
@@ -36,16 +39,21 @@ public class Controller {
         myCanvas.drawShape(shape);
         return shape;
     }
-    @CrossOrigin
-    @PostMapping("/copymove")
-    public void CopyMove(@RequestParam(value = "dimensions") String dimension ,@RequestParam(value = "id") String id,@RequestParam(value = "state")String state) throws CloneNotSupportedException {
-        Shape shape = myCanvas.getShapes().get(Long.valueOf(id));
-        if(state.equalsIgnoreCase("move")){
-            shape.move(dimension,id);
-        }else if(state.equalsIgnoreCase("copy")){
-            shape.copy(dimension,id);
-        }
 
+    @CrossOrigin
+    @RequestMapping("/copymove")
+    public String CopyMove(@RequestParam(value = "dimensions") String dimension ,
+                           @RequestParam(value = "id") String id,@RequestParam(value = "state")String state)
+            throws CloneNotSupportedException, UnsupportedEncodingException {
+        long idL = Long.parseLong(id);
+        Shape shape = myCanvas.getShapes().get(idL);
+        dimension = URLDecoder.decode(dimension, StandardCharsets.UTF_8.toString());
+        if(state.equalsIgnoreCase("move")){
+            shape.move(dimension,idL);
+        }else if(state.equalsIgnoreCase("copy")){
+            shape.copy(dimension,idL);
+        }
+    return "RECEIVE";
     }
     @CrossOrigin
     @RequestMapping("/shape")

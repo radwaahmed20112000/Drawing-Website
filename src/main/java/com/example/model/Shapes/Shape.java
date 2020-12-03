@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Shape implements IShape,Cloneable, Serializable {
+public class Shape implements IShape,Cloneable, Serializable {
     String dimensions;
     String shapeType;
     HashMap<String,String> JSONDimensions;
@@ -25,14 +25,17 @@ public abstract class Shape implements IShape,Cloneable, Serializable {
     }
 
     @Override
-    public void move(String dimensions, String id){
-        Shape shape = (Shape) this.myCanvas.getShapes().get(id);
+    public void move(String dimensions,long id){
+        System.out.println("oldddd"+this.myCanvas.getShapes().get(id).getJSONDimensions().toString());
+        Shape shape = this.myCanvas.getShapes().get(id);
         HashMap<String,String> dimension = this.fromJsonToMap(dimensions);
         shape.setJSONDimensions(dimension);
+        System.out.println("newwwww"+this.myCanvas.getShapes().get(id).getJSONDimensions().toString());
+
     }
 
     @Override
-    public void copy(String dimensions, String id) throws CloneNotSupportedException {
+    public void copy(String dimensions, long id) throws CloneNotSupportedException {
         Shape shape = (Shape) this.myCanvas.getShapes().get(id).clone();
         shape.setID(myCanvas.getCurrentID());
         myCanvas.setCurrentID();
