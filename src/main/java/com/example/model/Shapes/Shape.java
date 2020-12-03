@@ -52,8 +52,8 @@ public abstract class Shape implements IShape,Cloneable, Serializable {
 
     @Override
     public void updateShape() {
-        myCanvas.getShapes().put(ID,this);
         //undo n redo
+        myCanvas.getShapes().put(ID,this);
     }
 
     @Override

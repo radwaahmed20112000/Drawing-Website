@@ -39,7 +39,7 @@ public class Controller {
     @CrossOrigin
     @PostMapping("/copymove")
     public void CopyMove(@RequestParam(value = "dimensions") String dimension ,@RequestParam(value = "id") String id,@RequestParam(value = "state")String state) throws CloneNotSupportedException {
-        Shape shape = myCanvas.getShapes().get(id);
+        Shape shape = myCanvas.getShapes().get(Long.valueOf(id));
         if(state.equalsIgnoreCase("move")){
             shape.move(dimension,id);
         }else if(state.equalsIgnoreCase("copy")){

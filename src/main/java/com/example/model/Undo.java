@@ -11,7 +11,6 @@ public class Undo {
     public Undo(){
         undo = new Stack<Shape>();
         redo = new Stack<Shape>();
-
     }
 
     public Stack<Shape> getUndo() {
