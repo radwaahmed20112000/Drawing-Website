@@ -28,7 +28,6 @@ export default {
         var range = document.getElementById(this.range_id),
             range_div = document.getElementById(this.div_id);
         console.log(range.id,range_div.id);
-
         if(range.style.opacity === "0")
         {
             range.style.opacity = "1";
@@ -110,12 +109,10 @@ input[type="range"]{
   display: block;
   opacity: 0;
 }
-
 #Inputs{
   padding: 2px;
   margin: 0%;
   height: 30px;
   width:80px;
 }
-
 </style>

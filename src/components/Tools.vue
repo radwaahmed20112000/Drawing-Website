@@ -4,7 +4,7 @@
       <h1><span>i</span>nspire <i class="fa fa-paint-brush"></i></h1>
       <h4>Best Drawing & Painting App</h4>
     </div>
-    <div id="newDrawing" @click="drawRect"><i class="fa fa-plus"></i> New Drawing</div>
+    <div id="newDrawing" ><i class="fa fa-plus"></i> New Drawing</div>
     <div id="open"><i class="fa fa-folder-open"></i> Open Drawing</div>
     <div id="saveDrawing"><i class="fa fa-save"></i> Save Drawing
       <ul id="saveList">
@@ -47,17 +47,14 @@ export default {
     });
     //End Navigation Bar
   },
-
 }
 </script>
 
 <style scoped>
-
 /*NAVIGATION BAR STYLING*/
 #toolBar {
   text-align: left;
   background-color: black;
-  color: black;
   font-weight: 600;
   font-size: 15px;
   padding: 12px;
@@ -79,9 +76,9 @@ export default {
   display: inline-block;
 }
 #appLogo h1{
-  font-family: 'Jasmina FY';
+  font-family: 'Jasmina FY',serif;
   display: inline-block;
-  margin-bottom: 0px;
+  margin-bottom: 0;
   margin-top: 10px;
   font-size: 40px;
 }
@@ -93,7 +90,7 @@ export default {
 }
 #appLogo h4 {
   font-size: 15px;
-  font-family: 'Jasmina FY';
+  font-family: 'Jasmina FY',serif;
   margin-top: 5px;
 }
 #saveDrawing ul, #edit ul{
