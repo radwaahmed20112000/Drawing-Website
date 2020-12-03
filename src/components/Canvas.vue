@@ -15,7 +15,8 @@ let drawing = false;
 let Selected = false;
 let Moving = false;
 let Resizing = false
-
+let Dimension = {};
+let style = {};
 let DrawingCanvasMode = false;
 let startX = 0;
 let startY = 0;
@@ -193,6 +194,7 @@ export default {
     },
     startEdit(){
       if(!Selected)return
+      this.readDimension()
       this.drawCanvas(this.currentId)
     },
     finishEdit(){
@@ -212,38 +214,9 @@ export default {
       this.context.beginPath();
       //if(!this.mousemoved) return;
       this.mousemoved = false;
-      let style = {
-            Color: this.currentCollor,
-            fillColor: this.currentFillColor,
-            Transparent: this.fill,
-            lineWidth: this.currentLineWidth
-          },
-          Dimension;
-      style = JSON.stringify(style);
-    //  console.log("yarab"+this.selectedshape);
-      if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
-
-        Dimension = {
-          radiusX: this.radiusx,
-          radiusY: this.radiusy,
-          CenterX: Math.abs(startX),
-          CenterY: Math.abs(startY),
-          start_X : startX,
-          start_Y : startY,
-          end_X : X,
-          end_Y : Y
-        }
-
-      } else if (this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
-          || this.selectedshape === "triangle" || this.selectedshape === "rectangle" || this.selectedshape === "line") {
-
-        Dimension = {
-          start_X: startX,
-          start_Y: startY,
-          end_X: X,
-          end_Y: Y
-        }
-      }
+      this.setDimensions()
+      this.setstyle()
+      style = JSON.stringify(style); 
       Dimension = JSON.stringify(Dimension);
       await this.sendShapeData(Dimension, style);
       await this.GetShapesData("/shape");
@@ -254,7 +227,54 @@ export default {
       this.fill = fill ;
       this.context.strokeStyle = lineColor;
     },
-    /* Set Coordinates */
+/* Set Coordinates */
+    setDimensions(){
+      if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
+        Dimension = {
+          radiusX: this.radiusx,
+          radiusY: this.radiusy,
+          CenterX: Math.abs(X),
+          CenterY: Math.abs(Y),
+          start_X : X,
+          start_Y : Y,
+          end_X : X,
+          end_Y : Y
+        }
+      }
+      else if (this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
+          || this.selectedshape === "triangle" || this.selectedshape === "rectangle" || this.selectedshape === "line") {
+        Dimension = {
+          start_X: startX,
+          start_Y: startY,
+          end_X: X,
+          end_Y: Y
+        }
+      }
+    },
+    readDimension(shape = this.currentShape){
+      if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
+      
+        this.radiusX = shape.jsondimensions.radiusX
+        this.radiusY = shape.jsondimensions.radiusY
+       this.setStartCoordinates(shape.jsondimensions.CenterX,shape.jsondimensions.CenterY)
+
+      }
+      else if (this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
+          || this.selectedshape === "triangle" || this.selectedshape === "rectangle" || this.selectedshape === "line") {
+       
+        this.setStartCoordinates(shape.jsondimensions.start_X,shape.jsondimensions.start_Y)
+        this.setEndCoordinates(shape.jsondimensions.end_X,shape.jsondimensions.end_Y)
+      }
+
+    },
+    setstyle(){
+      style = {
+        Color: this.currentCollor,
+        fillColor: this.currentFillColor,
+        Transparent: this.fill,
+        lineWidth: this.currentLineWidth
+      }
+    },
     setStartCoordinates : function (e,x,y){
       if(e) {
         startX = e.offsetX
@@ -303,11 +323,12 @@ export default {
        //   console.log(this.shapesData);
         }})
     },
-    async updateShape(state){
-      const respnse = await axios.get(apiUrl+"/copymove",{params:{
-          dimensions  : {
 
-    },
+    async updateShape(state){
+      this.setDimensions()
+      
+      const respnse = await axios.get(apiUrl+"/copymove",{params:{
+          dimensions  : JSON.stringify(Dimension),
           id:encodeURIComponent(this.currentId),
           state:encodeURIComponent(state)
         }
@@ -500,7 +521,7 @@ export default {
     }	,
     drawCircleEdit(e , Radius  ) {
     //  if( !editing){return}
-      //this.setEndCoordinates(e)
+      this.setEndCoordinates(e)
       this.context.putImageData(imageData,0,0)
       this.context.beginPath()
       this.context.arc(e.offsetX, e.offsetY, Radius, 0 , 2 * Math.PI)
