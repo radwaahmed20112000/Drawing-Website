@@ -25,6 +25,7 @@ let startY = 0;
 let imageData = null;
 let X = 0;
 let Y = 0;
+let drawn = false;
 export default {
   name: "Canvas",
   components: {
@@ -64,7 +65,7 @@ export default {
     })
     this.eraseShapes()
     this.rgbaCanvas = this.getCanvasRgba();
-    console.log(this.rgbaCanvas);
+   // console.log(this.rgbaCanvas);
     /***************/
     document.getElementById("move").addEventListener("click",()=> {
       this.resetState()
@@ -100,14 +101,14 @@ export default {
         this.selectShape(e);
     });
     this.canvas.addEventListener("mouseup", (e)=> {
-      console.log(Resizing)
+    //  console.log(Resizing)
       if((Moving||Copying ||Resizing) && Selected){
-        console.log("AAAH")
+       // console.log("AAAH")
         this.finishEdit(e);
 
       }
       else if (drawing && !Resizing){
-        console.log("LAAAAA")
+      //  console.log("LAAAAA")
 
         this.finishShape(e);
 
@@ -148,7 +149,7 @@ export default {
     setselectmode()
     {
       Selected = true
-      console.log("select moooooooooooode");
+     // console.log("select moooooooooooode");
     },
     setshape(value){
       this.selectedshape=value;
@@ -212,7 +213,7 @@ export default {
       }
       imageData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height)
       if(!Deleting){
-        console.log("ILOVEANIMALS")
+       // console.log("ILOVEANIMALS")
         this.drawShapeProgrammatically(this.currentId)
 
       }
@@ -253,9 +254,9 @@ export default {
       imageData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height)
     },
     async finishShape() {
-      console.log("YA SARA ANA HENAA")
+     // console.log("YA SARA ANA HENAA")
       drawing = false;
-      console.log("SET RESIZE TO FALSE")
+     // console.log("SET RESIZE TO FALSE")
       Resizing = false;
       this.context.beginPath();
       //if(!this.mousemoved) return;
@@ -264,8 +265,12 @@ export default {
       this.setstyle()
       style = JSON.stringify(style); 
       Dimension = JSON.stringify(Dimension);
-      await this.sendShapeData(Dimension, style);
-      await this.GetShapesData("/shape");
+      if(drawn) {
+        await this.sendShapeData(Dimension, style);
+        await this.GetShapesData("/shape");
+      }
+      drawn = false
+
     },
     setShapeAttributes(lineColor,fillColor,lineOpacity,fill){
       this.context.lineWidth = lineOpacity;
@@ -298,7 +303,7 @@ export default {
       }
     },
     readDimension(shape = this.currentShape){
-      console.log("I READ THE DIMENSIONS")
+     // console.log("I READ THE DIMENSIONS")
       if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
       
         this.radiusX = shape.jsondimensions.radiusX
@@ -355,27 +360,17 @@ export default {
     },
     async GetShapesData(para){
       await axios.get(apiUrl + para).then(Response => {
-      // console.log("HELLO BABA " + Response.data)
+      console.log(Response.data)
         //console.log("LENGTH"+Object.keys(Response.data).length)
         this.shapesData=[];
-        // for(let i =0 ;i < Object.keys(Response.data).length;i++) {
-        //   // console.log("RESPOSE"+Response.data[i])
-        //   this.shapesData[i] = {
-        //     id: Response.data[i].id,
-        //     shapeType: Response.data[i].shapeType,
-        //     jsondimensions: JSON.parse(JSON.stringify(Response.data[i].jsondimensions)),
-        //     jsonproperties: JSON.parse(JSON.stringify(Response.data[i].jsonproperties))
-        //   }
-        // }
-        let indeces = Object.keys(Response.data)
-        //console.log(length)
-        for(let i =0 ;i <indeces.length;i++){
-         console.log(Response.data[indeces[i]])
+        let indices = Object.keys(Response.data)
+        for(let i =0 ;i <indices.length;i++){
+        // console.log(Response.data[indices[i]])
           this.shapesData[i] = {
-            id : Response.data[indeces[i]].id,
-            shapeType: Response.data[indeces[i]].shapeType,
-            jsondimensions: JSON.parse(JSON.stringify(Response.data[indeces[i]].jsondimensions)),
-            jsonproperties: JSON.parse(JSON.stringify(Response.data[indeces[i]].jsonproperties))
+            id : Response.data[indices[i]].id,
+            shapeType: Response.data[indices[i]].shapeType,
+            jsondimensions: JSON.parse(JSON.stringify(Response.data[indices[i]].jsondimensions)),
+            jsonproperties: JSON.parse(JSON.stringify(Response.data[indices[i]].jsonproperties))
          }
        }
     })
@@ -429,7 +424,7 @@ export default {
     async deleteShape(){
       const response =  await axios.get(apiUrl + "/delete",{ params: {id: this.currentId } })
       await this.GetShapesData("/shape");
-      console.log(JSON.stringify(response))
+     console.log(JSON.stringify(response))
     },
     /* Free Sketching Methods */
     startSketch : function(e){
@@ -454,6 +449,7 @@ export default {
         this.context.putImageData(imageData,0,0);
         this.setEndCoordinates(e);
       }
+      if(!Resizing) drawn = !(X === startX && Y === startY);
       const base = (X - startX) * 2;
       this.context.moveTo(startX,startY);
       this.context.lineTo(X,Y);
@@ -489,6 +485,7 @@ export default {
       if(drawing){
         this.setEndCoordinates(e);
       }
+      if(!Resizing) drawn = !(X === startX && Y === startY);
       // console.log(X+" "+Y+" "+startX+" "+startY+" "+numberOfSides)
       if(!Selected)
         this.radiusx = X - startX;
@@ -511,6 +508,8 @@ export default {
         this.setEndCoordinates(e)
         this.context.putImageData(imageData,0,0)
       }
+      if(!Resizing) drawn = !(X === startX && Y === startY);
+
       let width = X-startX
       let height = Y-startY
       if(this.fill){
@@ -540,6 +539,8 @@ export default {
         this.setEndCoordinates(e)
         this.context.putImageData(imageData,0,0)
       }
+      if(!Resizing) drawn = !(X === startX && Y === startY);
+
       this.context.moveTo(startX, startY);
       this.context.lineTo(X, Y);
       if(this.fill){
@@ -571,6 +572,7 @@ export default {
         // const centreY = Math.abs(Y-this.radiusy);
         this.context.putImageData(imageData,0,0);
       }
+      if(!Resizing) drawn = !(X === startX && Y === startY);
       this.context.ellipse(startX,startY,this.radiusx,this.radiusy,Math.PI , 0 ,2 * Math.PI);
       this.context.stroke();
       if(this.fill){
@@ -595,13 +597,15 @@ export default {
       if(!drawing &&!DrawingCanvasMode)
         return
       if(drawing){
-        console.log("HELLO SARSOURA")
+      //  console.log("HELLO SARSOURA")
 
         this.setEndCoordinates(e)
         this.context.putImageData(imageData,0,0)
         this.radiusx = Math.sqrt(Math.pow((X - startX), 2) + Math.pow((Y - startY), 2))
       }
-      console.log("HELLO SARSOURA")
+      if(!Resizing) drawn = !(X === startX && Y === startY);
+
+     // console.log("HELLO SARSOURA")
 
       this.context.arc(startX, startY, this.radiusx, 0, 2 * Math.PI)
       this.context.stroke()
@@ -700,7 +704,7 @@ export default {
       for(let i = this.shapesData.length - 1; i>=0; i--)
       {
         const shape = this.shapesData[i];
-        console.log("ELCNAVAS EL5AFEYYA"+JSON.stringify(shape.jsondimensions))
+        //console.log("ELCNAVAS EL5AFEYYA"+JSON.stringify(shape.jsondimensions))
         this.selectContext.beginPath();
         if(shape.shapeType === "rectangle") {
           this.rectSelected(shape.jsondimensions.start_X, shape.jsondimensions.start_Y,shape.jsondimensions.end_X, shape.jsondimensions.end_Y);
@@ -724,14 +728,14 @@ export default {
          Selected = true
           this.currentId = shape.id;
          this.currentShape = shape
-          console.log("Selected   " + shape.id)
+         //console.log("Selected   " + shape.id)
           return;
         }
         this.currentId = null;
         this.selectContext.closePath();
         this.selectContext.clearRect(0,0,this.selectCanvas.width, this.selectCanvas.height);
       }
-      console.log("not Selected")
+     // console.log("not Selected")
     },
     rectSelected( x, y, xe, ye)
     {
