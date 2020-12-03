@@ -79,5 +79,19 @@ public class Controller {
         return myCanvas.getShapes().size();
     }
 
+    @CrossOrigin
+    @RequestMapping("/undo")
+    @ResponseBody
+    public Map<Long, Shape> undoCanvas (){
+        myCanvas.undoCanvas();
+        return myCanvas.getShapes();
+    }
+    @CrossOrigin
+    @RequestMapping("/redo")
+    @ResponseBody
+    public Map<Long, Shape> redoCanvas (){
+        myCanvas.redoCanvas();
+        return myCanvas.getShapes();
+    }
 
 }
