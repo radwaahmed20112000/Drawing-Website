@@ -28,7 +28,6 @@
 
 
 <script>
-
 export default {
   name: 'toolsBar',
 }
@@ -36,7 +35,6 @@ export default {
 
 
 <style scoped>
-
 .grid-container {
   position: absolute;
   width: 70px;
@@ -44,20 +42,16 @@ export default {
   /*height: 100vh;*/
   grid-template-columns: auto ;
 }
-
 .grid-item {
   background-color:#e6e6e6;
   border: 1px solid white;
   height: 40px;
   text-align: center;
-
 }
 #redo{
   transform: rotate(90deg);
 }
-
 #tools{
   background-color: #595959;
 }
-
 </style>
