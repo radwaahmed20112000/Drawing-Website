@@ -67,42 +67,29 @@ export default {
     this.rgbaCanvas = this.getCanvasRgba();
     /***************/
     document.getElementById("move").addEventListener("click",()=> {
+      this.resetState()
       Moving = true
-      Copying = false
-      Deleting = false
-      Resizing = false
-      this.currentShape = null
     })
     document.getElementById("copy").addEventListener("click",()=> {
+      this.resetState()
       Copying = true
-      Moving = false
-      Resizing = false
-      Deleting = false
-      this.currentShape = null
     })
     document.getElementById("resize").addEventListener("click",()=> {
+      this.resetState()
       Resizing = true
-      Moving = false
-      Copying = false
-      Deleting = false
-      this.currentShape = null
     })
     document.getElementById("delete").addEventListener("click",()=>{
+      this.resetState()
       Deleting = true
-      Moving = false
-      Copying = false
-      Resizing = false
-      this.currentShape = null
     });
     this.canvas.addEventListener("mousedown", async (e)=> {
       if(Moving||Copying||Deleting||Resizing){//andmove
         await this.select(e)
-        this.startEdit(e)
+        this.startEdit()
       }
       else
         this.startShape(e);
-      if(Resizing&& Selected&& !drawing)
-        this.finishEdit(e);
+
     });
   this.canvas.addEventListener("mousemove", (e)=>{
       if(Moving||Copying)//andmove
@@ -113,10 +100,18 @@ export default {
         this.selectShape(e);
     });
     this.canvas.addEventListener("mouseup", (e)=> {
-      if((Moving||Copying ) && Selected)
+      console.log(Resizing)
+      if((Moving||Copying ||Resizing) && Selected){
+        console.log("AAAH")
         this.finishEdit(e);
-      else if (drawing )
+
+      }
+      else if (drawing && !Resizing){
+        console.log("LAAAAA")
+
         this.finishShape(e);
+
+      }
       else if(Deleting)
         this.deleteShape()
     });
@@ -157,12 +152,10 @@ export default {
     },
     setshape(value){
       this.selectedshape=value;
-      Moving = false
-      Copying = false
-      Deleting = false
+        this.resetState()
     },
     resizeShape(e){
-
+      if(!Selected)return
       //imageData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height)
       this.selectShape(e)
     },
@@ -208,7 +201,7 @@ export default {
     drawCanvas(id){
      // this.canvas.addEventListener("mousemove",()=>{})
       DrawingCanvasMode = true
-     console.log("ALOOOO"+this.shapesData.length)
+   //  console.log("ALOOOO"+this.shapesData.length)
       this.clearCanvas()
       for(let i = 0 ; i < this.shapesData.length; i++ ){
         if(this.shapesData[i].id === id &&!Copying ){
@@ -218,8 +211,11 @@ export default {
         this.drawShapeProgrammatically(i)
       }
       imageData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height)
-      if(!Deleting)
-      this.drawShapeProgrammatically(this.currentId)
+      if(!Deleting){
+        console.log("ILOVEANIMALS")
+        this.drawShapeProgrammatically(this.currentId)
+
+      }
       DrawingCanvasMode = false
     },
     clearCanvas(){
@@ -229,11 +225,13 @@ export default {
       if(!Selected)return
       this.readDimension()
       this.drawCanvas(this.currentId)
-      if(Resizing){
-        this.setshape(this.currentShape.shapeType)
-        drawing = true
-        this.setStartCoordinates(startX,startY)
-      }
+      //sanya keda
+      // if(Resizing){
+      //   this.setshape(this.currentShape.shapeType)
+      //   drawing = true
+      // //  this.setStartCoordinates(startX,startY)
+      //   console.log("SETTTT")
+      // }
     },
     finishEdit(){
       Selected = false
@@ -251,10 +249,14 @@ export default {
       if(this.selectedshape === '') return;
       drawing = true
       this.setStartCoordinates(e)
+      this.setEndCoordinates(e)
       imageData = this.context.getImageData(0,0,this.canvas.width,this.canvas.height)
     },
     async finishShape() {
+      console.log("YA SARA ANA HENAA")
       drawing = false;
+      console.log("SET RESIZE TO FALSE")
+      Resizing = false;
       this.context.beginPath();
       //if(!this.mousemoved) return;
       this.mousemoved = false;
@@ -296,6 +298,7 @@ export default {
       }
     },
     readDimension(shape = this.currentShape){
+      console.log("I READ THE DIMENSIONS")
       if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
       
         this.radiusX = shape.jsondimensions.radiusX
@@ -381,27 +384,33 @@ export default {
     //  this.setDimensions()
    //   console.log("HI ANA WIDTH"+this.width+" "+ this.height)
       this.selectedshape = this.currentShape.shapeType
-      if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
-        Dimension = {
-          radiusX: this.radiusx,
-          radiusY: this.radiusy,
-          CenterX: Math.abs(X),
-          CenterY: Math.abs(Y),
-          start_X : X,
-          start_Y : Y,
-          end_X : parseFloat(X)+parseFloat(this.radiusx),
-          end_Y : parseFloat(Y)+parseFloat(this.radiusy),
+      if(Moving||Copying){
+        if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
+          Dimension = {
+            radiusX: this.radiusx,
+            radiusY: this.radiusy,
+            CenterX: Math.abs(X),
+            CenterY: Math.abs(Y),
+            start_X : X,
+            start_Y : Y,
+            end_X : parseFloat(X)+parseFloat(this.radiusx),
+            end_Y : parseFloat(Y)+parseFloat(this.radiusy),
+          }
+        }
+        else if (this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
+            || this.selectedshape === "triangle" || this.selectedshape === "rectangle" || this.selectedshape === "line") {
+          Dimension = {
+            start_X: X,
+            start_Y: Y,
+            end_X: parseFloat(X)+parseFloat(this.width),
+            end_Y: parseFloat(Y)+parseFloat(this.height),
+          }
         }
       }
-      else if (this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
-          || this.selectedshape === "triangle" || this.selectedshape === "rectangle" || this.selectedshape === "line") {
-        Dimension = {
-          start_X: X,
-          start_Y: Y,
-          end_X: parseFloat(X)+parseFloat(this.width),
-          end_Y: parseFloat(Y)+parseFloat(this.height),
-        }
+      else if(Resizing){
+        this.setDimensions()
       }
+
       await axios.get(apiUrl+"/copymove",{params:{
           dimensions  : Dimension,
           id:encodeURIComponent(this.currentId),
@@ -410,13 +419,6 @@ export default {
     })
      // console.log("HELLO MAMA "+ respnse)
       await this.GetShapesData("/"+"shape")
-    //     params:{
-    //       id: this.currentId,
-    //       sX : this.currentShape.start_X,
-    //       sY:this.currentShape.start_Y,
-    //       eX : this.currentShape.end_X,
-    //       eY : this.currentShape.end_Y
-    // })
     },
     async eraseShapes(){
       this.shapesData = []
@@ -588,13 +590,18 @@ export default {
       this.context.beginPath();
     },
     drawCircle(e) {
+
       if(!drawing &&!DrawingCanvasMode)
         return
       if(drawing){
+        console.log("HELLO SARSOURA")
+
         this.setEndCoordinates(e)
         this.context.putImageData(imageData,0,0)
         this.radiusx = Math.sqrt(Math.pow((X - startX), 2) + Math.pow((Y - startY), 2))
       }
+      console.log("HELLO SARSOURA")
+
       this.context.arc(startX, startY, this.radiusx, 0, 2 * Math.PI)
       this.context.stroke()
       if(this.fill) this.context.fill();
@@ -644,6 +651,12 @@ export default {
           this.drawLine(null);
       }
       this.context.beginPath()
+    },resetState(){
+      Moving = false
+      Copying = false
+      Deleting = false
+      Resizing = false
+      this.currentShape = null
     },
     /****SELECTION****/
     checkColor(e)
@@ -682,7 +695,7 @@ export default {
         this.currentId = null;
         return;
       }
-      console.log(this.shapesData.length)
+    //  console.log(this.shapesData.length)
       for(let i = this.shapesData.length - 1; i>=0; i--)
       {
         const shape = this.shapesData[i];
@@ -710,8 +723,7 @@ export default {
          Selected = true
           this.currentId = shape.id;
          this.currentShape = shape
-          console.log(shape.id)
-          console.log("Selected")
+          console.log("Selected   " + shape.id)
           return;
         }
         console.log("not Selected")
