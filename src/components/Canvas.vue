@@ -39,10 +39,9 @@ export default {
       selectContext : null,
       selectCanvas: null,
       toolBarHeight :0,
-      mousemoved : false,
       shapesData:[],
-      selectedshape:'',
-      currentCollor:"",
+      selectedShape:'',
+      currentColor:"",
       currentFillColor:"",
       fill:true,
       currentLineWidth:0,
@@ -129,21 +128,21 @@ export default {
       drawing = true
       // if(!drawing) return;
       this.setEndCoordinates(e);
-      if(this.selectedshape==="circle")
+      if(this.selectedShape==="circle")
         this.drawCircle(e);
-      else if(this.selectedshape==="pentagon")
+      else if(this.selectedShape==="pentagon")
         this.drawPolygon(5,e);
-      else if(this.selectedshape==="rectangle")
+      else if(this.selectedShape==="rectangle")
         this.drawRect(e);
-      else if(this.selectedshape==="triangle")
+      else if(this.selectedShape==="triangle")
         this.drawTriangle(e);
-      else if(this.selectedshape==="hexagon")
+      else if(this.selectedShape==="hexagon")
         this.drawPolygon(6,e);
-      else if(this.selectedshape==="line")
+      else if(this.selectedShape==="line")
         this.drawLine(e);
-      else if(this.selectedshape==="ellipse")
+      else if(this.selectedShape==="ellipse")
         this.drawEllipse(e);
-      else if(this.selectedshape==="sketch")
+      else if(this.selectedShape==="sketch")
         this.sketch(e);
     },
     setselectmode()
@@ -152,7 +151,7 @@ export default {
      // console.log("select moooooooooooode");
     },
     setshape(value){
-      this.selectedshape=value;
+      this.selectedShape=value;
         this.resetState()
     },
     resizeShape(e){
@@ -164,25 +163,23 @@ export default {
       if(!Selected) return;
       this.drawShapeEdit(e,this.currentId);
     },
-    drawShapeEdit(e/*,id*/){
-     // console.log(id);
-      //this.selectedshape=this.shapesData[id].shapeType;
-      this.selectedshape=this.currentShape.shapeType;
-      // const shape = this.shapesData[id];
+    drawShapeEdit(e){
+
+      this.selectedShape=this.currentShape.shapeType;
       const shape = this.currentShape;
-      if(this.selectedshape==="circle")
+      if(this.selectedShape==="circle")
         this.drawCircleEdit(e,shape.jsondimensions.radiusX, shape.jsondimensions.CenterX, shape.jsondimensions.CenterY)
-      else if(this.selectedshape==="pentagon")
+      else if(this.selectedShape==="pentagon")
         this.drawPolygonEdit(5,e );
-      else if(this.selectedshape==="rectangle")
+      else if(this.selectedShape==="rectangle")
         this.drawRectEdit(e ,( shape.jsondimensions.end_X - shape.jsondimensions.start_X ),(shape.jsondimensions.end_Y - shape.jsondimensions.start_Y) );
-      else if(this.selectedshape==="triangle")
+      else if(this.selectedShape==="triangle")
         this.drawTriangleEdit(e ,( shape.jsondimensions.end_X - shape.jsondimensions.start_X )*2, shape.jsondimensions.end_Y - shape.jsondimensions.start_Y);
-      else if(this.selectedshape==="hexagon")
+      else if(this.selectedShape==="hexagon")
         this.drawPolygon(6,e);
-      else if(this.selectedshape==="line")
+      else if(this.selectedShape==="line")
         this.drawLineEdit(e);
-      else if(this.selectedshape==="ellipse")
+      else if(this.selectedShape==="ellipse")
         this.drawEllipseEdit(e ,shape.jsondimensions.radiusX, shape.jsondimensions.radiusY
             , shape.jsondimensions.CenterX, shape.jsondimensions.CenterY);
     },
@@ -226,13 +223,6 @@ export default {
       if(!Selected)return
       this.readDimension()
       this.drawCanvas(this.currentId)
-      //sanya keda
-      // if(Resizing){
-      //   this.setshape(this.currentShape.shapeType)
-      //   drawing = true
-      // //  this.setStartCoordinates(startX,startY)
-      //   console.log("SETTTT")
-      // }
     },
     finishEdit(){
       Selected = false
@@ -247,7 +237,7 @@ export default {
         this.updateShape("copy")
     },
     startShape(e){
-      if(this.selectedshape === '') return;
+      if(this.selectedShape === '') return;
       drawing = true
       this.setStartCoordinates(e)
       this.setEndCoordinates(e)
@@ -259,8 +249,6 @@ export default {
      // console.log("SET RESIZE TO FALSE")
       Resizing = false;
       this.context.beginPath();
-      //if(!this.mousemoved) return;
-      this.mousemoved = false;
       this.setDimensions()
       this.setstyle()
       style = JSON.stringify(style); 
@@ -280,7 +268,7 @@ export default {
     },
 /* Set Coordinates */
     setDimensions(){
-      if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
+      if (this.selectedShape === "circle" || this.selectedShape === "ellipse") {
         Dimension = {
           radiusX: this.radiusx,
           radiusY: this.radiusy,
@@ -292,8 +280,8 @@ export default {
           end_Y : Y
         }
       }
-      else if (this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
-          || this.selectedshape === "triangle" || this.selectedshape === "rectangle" || this.selectedshape === "line") {
+      else if (this.selectedShape === "pentagon" || this.selectedShape === "hexagon"
+          || this.selectedShape === "triangle" || this.selectedShape === "rectangle" || this.selectedShape === "line") {
         Dimension = {
           start_X: startX,
           start_Y: startY,
@@ -303,25 +291,28 @@ export default {
       }
     },
     readDimension(shape = this.currentShape){
-     // console.log("I READ THE DIMENSIONS")
-      if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
+     console.log("I READ THE DIMENSIONS")
+      if (this.selectedShape === "circle" || this.selectedShape === "ellipse") {
       
         this.radiusX = shape.jsondimensions.radiusX
         this.radiusY = shape.jsondimensions.radiusY
        this.setStartCoordinates(shape.jsondimensions.CenterX,shape.jsondimensions.CenterY)
       }
-      else if (this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
-          || this.selectedshape === "triangle" || this.selectedshape === "rectangle" || this.selectedshape === "line") {
+      else if (this.selectedShape === "pentagon" || this.selectedShape === "hexagon"
+          || this.selectedShape === "triangle" || this.selectedShape === "rectangle" || this.selectedShape === "line") {
        
         this.setStartCoordinates(shape.jsondimensions.start_X,shape.jsondimensions.start_Y)
         this.setEndCoordinates(shape.jsondimensions.end_X,shape.jsondimensions.end_Y)
-        this.width = Math.abs(shape.jsondimensions.start_X-shape.jsondimensions.end_X)
-        this.height = Math.abs(shape.jsondimensions.start_Y-shape.jsondimensions.end_Y)
+        this.width = Math.abs(parseFloat(shape.jsondimensions.end_X)-parseFloat(shape.jsondimensions.start_X))
+        this.height = Math.abs(parseFloat(shape.jsondimensions.end_Y)-parseFloat(shape.jsondimensions.start_Y))
+        console.log("WIDTH"+this.width)
+        console.log("HEIGHT"+this.height)
+
       }
     },
     setstyle(){
       style = {
-        Color: this.currentCollor,
+        Color: this.currentColor,
         fillColor: this.currentFillColor,
         Transparent: this.fill,
         lineWidth: this.currentLineWidth
@@ -351,7 +342,7 @@ export default {
     /* Data Requests */
     async sendShapeData(Dimension, style) {
       let data = {
-        shapeType: this.selectedshape,
+        shapeType: this.selectedShape,
         dimensions: Dimension,
         properties: style
       }
@@ -378,9 +369,9 @@ export default {
     async updateShape(state){
     //  this.setDimensions()
    //   console.log("HI ANA WIDTH"+this.width+" "+ this.height)
-      this.selectedshape = this.currentShape.shapeType
+      this.selectedShape = this.currentShape.shapeType
       if(Moving||Copying){
-        if (this.selectedshape === "circle" || this.selectedshape === "ellipse") {
+        if (this.selectedShape === "circle" || this.selectedShape === "ellipse") {
           Dimension = {
             radiusX: this.radiusx,
             radiusY: this.radiusy,
@@ -392,8 +383,8 @@ export default {
             end_Y : parseFloat(Y)+parseFloat(this.radiusy),
           }
         }
-        else if (this.selectedshape === "pentagon" || this.selectedshape === "hexagon"
-            || this.selectedshape === "triangle" || this.selectedshape === "rectangle" || this.selectedshape === "line") {
+        else if (this.selectedShape === "pentagon" || this.selectedShape === "hexagon"
+            || this.selectedShape === "triangle" || this.selectedShape === "rectangle" || this.selectedShape === "line") {
           Dimension = {
             start_X: X,
             start_Y: Y,
@@ -408,8 +399,8 @@ export default {
 
       await axios.get(apiUrl+"/copymove",{params:{
           dimensions  : Dimension,
-          id:encodeURIComponent(this.currentId),
-          state:encodeURIComponent(state)
+          id : this.currentId,
+          state:state
         }
     })
      // console.log("HELLO MAMA "+ respnse)
@@ -419,7 +410,6 @@ export default {
       this.shapesData = []
       this.clearCanvas()
        await axios.delete(apiUrl + "/shapes")
-    //  console.log("OOO"+response.data)
     },
     async deleteShape(){
       const response =  await axios.get(apiUrl + "/delete",{ params: {id: this.currentId } })
@@ -460,7 +450,6 @@ export default {
       }
       this.context.beginPath();
       this.context.stroke();
-      this.mousemoved = true;
     },
     drawTriangleEdit(e , base,height ) {
       //if(!Selection){return}
@@ -499,7 +488,6 @@ export default {
       this.context.stroke();
       this.context.fill();
       this.context.beginPath();
-      this.mousemoved = true;
     },
     drawRect(e){
       if(!drawing &&!DrawingCanvasMode)
@@ -517,7 +505,6 @@ export default {
       }
       this.context.strokeRect(startX,startY,width,height)
       this.context.beginPath();
-      this.mousemoved = true;
     },
     drawRectEdit(e, width, height){
       if(!Selected)
@@ -548,7 +535,6 @@ export default {
       }
       this.context.stroke();
       this.context.beginPath();
-      this.mousemoved = true;
     },
     drawLineEdit(e) // needs editing
     {
@@ -579,7 +565,6 @@ export default {
         this.context.fill();
       }
       this.context.beginPath();
-      this.mousemoved = true;
     },
     drawEllipseEdit(e , radiusX ,radiusY  ){
       if(!Selected){return}
@@ -728,6 +713,7 @@ export default {
          Selected = true
           this.currentId = shape.id;
          this.currentShape = shape
+          this.selectedShape = shape.shapeType
          //console.log("Selected   " + shape.id)
           return;
         }
