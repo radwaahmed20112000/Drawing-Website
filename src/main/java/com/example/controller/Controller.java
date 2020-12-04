@@ -2,6 +2,7 @@ package com.example.controller;
 
 import com.example.model.Canvas;
 import com.example.model.Shapes.EllipticalShapes.EllipticalShapes;
+import com.example.model.Shapes.FreeDrawing.FreeDrawing;
 import com.example.model.Shapes.Polygons.Polygons;
 import com.example.model.Shapes.Shape;
 import org.springframework.context.annotation.Bean;
@@ -39,6 +40,12 @@ public class Controller {
         myCanvas.drawShape(shape);
         return shape;
     }
+//    @CrossOrigin
+//    @PostMapping("/sketch")
+//    public FreeDrawing sketch(@RequestBody FreeDrawing sketch) {
+//        myCanvas.drawShape(sketch);
+//        return sketch;
+//    }
 
     @CrossOrigin
     @RequestMapping("/copymove")

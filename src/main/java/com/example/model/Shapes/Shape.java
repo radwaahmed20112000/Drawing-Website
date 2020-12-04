@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ public class Shape implements IShape,Cloneable, Serializable {
     public void setID(long ID) {
         this.ID = ID;
     }
+
 
     @Override
     public void move(String dimensions,long id){

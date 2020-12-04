@@ -19,6 +19,9 @@ public class ShapeFactory {
             shape = new Hexagon(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
         else if(shape.shapeType.equalsIgnoreCase("Triangle"))
             shape = new Triangle(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
+        else if(shape.shapeType.equalsIgnoreCase("sketch"))
+            shape = new Triangle(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
+
         shape.setID(ID);
         return shape;
     }

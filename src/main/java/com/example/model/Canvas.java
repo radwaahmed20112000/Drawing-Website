@@ -47,6 +47,7 @@ public class Canvas {
         System.out.println(myUndo.getUndo().size());
         currentID++;
     }
+
     public void clearCanvas(){
         getShapes().clear();
         currentID = 0;
