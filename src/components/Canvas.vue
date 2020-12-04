@@ -26,6 +26,8 @@ let imageData = null;
 let X = 0;
 let Y = 0;
 let drawn = false;
+//let sketching = false
+let freeDrawing = [];
 export default {
   name: "Canvas",
   components: {
@@ -81,6 +83,9 @@ export default {
     document.getElementById("delete").addEventListener("click",()=>{
       this.resetState()
       Deleting = true
+    });
+    document.getElementById("brush").addEventListener("click",()=>{
+     // sketching = true
     });
     this.canvas.addEventListener("mousedown", async (e)=> {
       if(Moving||Copying||Deleting||Resizing){//andmove
@@ -289,26 +294,36 @@ export default {
           end_Y: Y
         }
       }
+        else if(this.selectedShape === "sketch"){
+        Dimension = {
+          freeDrawing:freeDrawing.toString()
+        }
+      }
+
+
     },
     readDimension(shape = this.currentShape){
+      console.log("YABENT")
+      console.log(shape)
      console.log("I READ THE DIMENSIONS")
-      if (this.selectedShape === "circle" || this.selectedShape === "ellipse") {
-      
+      if (shape.shapeType === "circle" || shape.shapeType === "ellipse") {
+
         this.radiusX = shape.jsondimensions.radiusX
         this.radiusY = shape.jsondimensions.radiusY
-       this.setStartCoordinates(shape.jsondimensions.CenterX,shape.jsondimensions.CenterY)
+       this.setStartCoordinates(null,shape.jsondimensions.CenterX,shape.jsondimensions.CenterY)
       }
-      else if (this.selectedShape === "pentagon" || this.selectedShape === "hexagon"
-          || this.selectedShape === "triangle" || this.selectedShape === "rectangle" || this.selectedShape === "line") {
-       
-        this.setStartCoordinates(shape.jsondimensions.start_X,shape.jsondimensions.start_Y)
-        this.setEndCoordinates(shape.jsondimensions.end_X,shape.jsondimensions.end_Y)
+      else if (shape.shapeType === "pentagon" || shape.shapeType === "hexagon"
+          || shape.shapeType === "triangle" ||shape.shapeType === "rectangle" || shape.shapeType === "line") {
+
+        this.setStartCoordinates(null,shape.jsondimensions.start_X,shape.jsondimensions.start_Y)
+        this.setEndCoordinates(null,shape.jsondimensions.end_X,shape.jsondimensions.end_Y)
         this.width = Math.abs(parseFloat(shape.jsondimensions.end_X)-parseFloat(shape.jsondimensions.start_X))
         this.height = Math.abs(parseFloat(shape.jsondimensions.end_Y)-parseFloat(shape.jsondimensions.start_Y))
         console.log("WIDTH"+this.width)
         console.log("HEIGHT"+this.height)
-
       }
+      else if(shape.shapeType ==="sketch")
+        freeDrawing = this.currentShape.jsondimensions.freeDrawing.split(',')
     },
     setstyle(){
       style = {
@@ -346,8 +361,18 @@ export default {
         dimensions: Dimension,
         properties: style
       }
-     // console.log("hello"+this.selectedshape);
-      await axios.post(apiUrl + "/shape",data)
+      // if(sketching) {
+      //   data = {
+      //     shapeType: this.selectedShape,
+      //     dimensions: {
+      //       sketch : freeDrawing.toString(),
+      //     },
+      //     properties: style
+      //   }
+      //   console.log(data.dimensions.sketch)
+      //
+      // }
+        await axios.post(apiUrl + "/shape",data)
     },
     async GetShapesData(para){
       await axios.get(apiUrl + para).then(Response => {
@@ -418,19 +443,30 @@ export default {
     },
     /* Free Sketching Methods */
     startSketch : function(e){
-      drawing = true
       this.sketch(e)
-      this.context.fillStyle = "#f56909"
-      this.context.fillRect(0,0,this.canvas.width,this.canvas.height);
     },
     sketch : function(e){
-      if(drawing){
+      drawn = true
+      if(!drawing) return
         this.context.lineWidth = 10
         this.context.lineCap = "round"
         this.setStartCoordinates(e)
         this.context.lineTo(startX,startY)
+         freeDrawing.push(startX,startY)
+        this.context.stroke()
+
+    },
+    restoreSketch(){
+      console.log("FREEE"+freeDrawing)
+      this.context.beginPath();
+      for (let i = 0; i < freeDrawing.length-1; i+=2) {
+
+        this.setStartCoordinates(null,freeDrawing[i],freeDrawing[i+1])
+        this.context.lineTo(startX,startY)
         this.context.stroke()
       }
+      this.context.beginPath();
+
     },
     /* Polygons Drawing Methods*/
     drawTriangle(e) {
@@ -608,13 +644,31 @@ export default {
       }
       this.context.stroke()
     },
+    // drawShapeProgrammatically(id){
+    //   let shape = this.shapesData[id]
+    //   if(!shape) return
+    //   this.readDimension(shape)
+    //   let shapeType = shape.shapeType
+    //     if(shapeType === "circle")
+    //       this.drawCircle(null)
+    //     else if(shapeType === "ellipse")
+    //       this.drawEllipse(null)
+    //   else if(shapeType === "sketch")
+    //     this.restoreSketch()
+    //   else if(shapeType==="pentagon") this.drawPolygon(5,null);
+    //     else if(shapeType==="rectangle") this.drawRect(null );
+    //     else if(shapeType==="triangle") this.drawTriangle(null);
+    //     else if(shapeType==="hexagon") this.drawPolygon(6,null);
+    //     else if(shapeType==="line") this.drawLine(null);
+    //   this.context.beginPath()
+    // }
     drawShapeProgrammatically(id){
       //let shape = this.currentShape
       let shape = this.shapesData[id]
       if(!shape){
         return
       }
-     // console.log(shape.shapeType);
+      // console.log(shape.shapeType);
       let shapeType = shape.shapeType
       if(shapeType==="circle"||shapeType==="ellipse") {
         this.setStartCoordinates(null, shape.jsondimensions.CenterX, shape.jsondimensions.CenterY)
@@ -625,7 +679,13 @@ export default {
         else
           this.drawEllipse(null)
       }
-      else{
+      else if(shape.shapeType ==="sketch"){
+        console.log("ALOOO")
+        console.log(shape.jsondimensions)
+      freeDrawing = shape.jsondimensions.freeDrawing.split(',')
+        this.restoreSketch()
+      }
+      else {
         this.setStartCoordinates(null, shape.jsondimensions.start_X, shape.jsondimensions.start_Y)
         this.setEndCoordinates(null, shape.jsondimensions.end_X, shape.jsondimensions.end_Y)
         this.radiusx = X-startX
@@ -641,7 +701,8 @@ export default {
           this.drawLine(null);
       }
       this.context.beginPath()
-    },resetState(){
+    }
+    ,resetState(){
       Moving = false
       Copying = false
       Deleting = false
