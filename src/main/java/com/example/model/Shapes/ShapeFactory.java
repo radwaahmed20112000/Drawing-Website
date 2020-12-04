@@ -23,6 +23,7 @@ public class ShapeFactory {
             shape = new Triangle(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
 
         shape.setID(ID);
+        shape.setShapeState("created");
         return shape;
     }
 

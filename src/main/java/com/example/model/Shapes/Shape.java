@@ -12,6 +12,7 @@ import java.util.Map;
 public class Shape implements IShape,Cloneable, Serializable {
     String dimensions;
     String shapeType;
+    String shapeState;
     HashMap<String,String> JSONDimensions;
     HashMap<String,String> JSONProperties;
     String properties;
@@ -25,13 +26,29 @@ public class Shape implements IShape,Cloneable, Serializable {
         this.ID = ID;
     }
 
+    public void setShapeState(String shapeState) {
+        this.shapeState = shapeState;
+    }
+
+    public String getShapeState() {
+        return shapeState;
+    }
+
 
     @Override
-    public void move(String dimensions,long id){
+    public void move(String dimensions,long id) throws CloneNotSupportedException {
         System.out.println("oldddd"+this.myCanvas.getShapes().get(id).getJSONDimensions().toString());
         Shape shape = this.myCanvas.getShapes().get(id);
+        Shape movedShape=(Shape)shape.clone();
+        Shape newShape=(Shape)shape.clone();
+        newShape.setShapeState("Edit");
+        myCanvas.addToUndoStack(newShape);
         HashMap<String,String> dimension = this.fromJsonToMap(dimensions);
-        shape.setJSONDimensions(dimension);
+        movedShape.setJSONDimensions(dimension);
+        newShape=(Shape)movedShape.clone();
+        newShape.setShapeState("AfterEdit");
+        myCanvas.addToUndoStack(newShape);
+        myCanvas.getShapes().put(movedShape.getID(),movedShape);
         System.out.println("newwwww"+this.myCanvas.getShapes().get(id).getJSONDimensions().toString());
 
     }
@@ -44,6 +61,7 @@ public class Shape implements IShape,Cloneable, Serializable {
         HashMap<String, String> dimension = this.fromJsonToMap(dimensions);
         shape.setJSONDimensions(dimension);
         myCanvas.getShapes().put(shape.getID(), shape);
+        myCanvas.addToUndoStack(shape);
     }
 
     public Object clone()throws CloneNotSupportedException{
