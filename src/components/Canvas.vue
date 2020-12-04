@@ -1,8 +1,10 @@
 <template>
   <div>
     <canvas id="canvasSelect"></canvas>
+    
     <canvas id="Canvas" ></canvas>
-    <toolsBar id="toolsBar" @setshape="setshape" @setselectmode = "setselectmode"/>
+    <toolsBar id="toolsBar" @setshape="setshape" @setselectmode = "setselectmode" @setundo = "setUndoMode" />
+    <ShapeBar @setlinecolorat="setlinecolor" @setfillcolorat="setfillcolor" @setwidth="setlinewidth" ></ShapeBar>
   </div>
 </template>
 
@@ -11,6 +13,7 @@ import axios from 'axios';
 const apiUrl = "http://localhost:8089"
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
 import toolsBar from '@/components/toolsBar.vue'
+import ShapeBar from '@/components/ShapeBar.vue';
 let drawing = false;
 let Selected = false;
 let Moving = false;
@@ -28,10 +31,13 @@ let Y = 0;
 let drawn = false;
 //let sketching = false
 let freeDrawing = [];
+let col;
+ let ll;
 export default {
   name: "Canvas",
   components: {
-    toolsBar
+    toolsBar,
+    ShapeBar
   },
   data(){
     return{
@@ -43,10 +49,10 @@ export default {
       toolBarHeight :0,
       shapesData:[],
       selectedShape:'',
-      currentColor:"",
-      currentFillColor:"",
+      currentColor:"#000000",
+      currentFillColor:"#000000",
       fill:true,
-      currentLineWidth:0,
+      currentLineWidth:"3",
       radiusx:0,
       radiusy:0,
       currentId : null,
@@ -94,7 +100,6 @@ export default {
       }
       else
         this.startShape(e);
-
     });
   this.canvas.addEventListener("mousemove", (e)=>{
       if(Moving||Copying)//andmove
@@ -109,23 +114,44 @@ export default {
       if((Moving||Copying ||Resizing) && Selected){
        // console.log("AAAH")
         this.finishEdit(e);
-
       }
       else if (drawing && !Resizing){
       //  console.log("LAAAAA")
-
         this.finishShape(e);
-
       }
       else if(Deleting)
         this.deleteShape()
     });
   },
   methods:{
+      setlinecolor() {
+        col=document.getElementById("colorpickerLine");
+        this.currentColor=col.value;
+        console.log( col.value)
+  
+  
+  
+},
+   setfillcolor() {
+     ll=document.getElementById("fillColor");
+  this.currentFillColor=ll.value;
+    console.log( "helo"+this.currentFillColor)
+  
+},
+   setlinewidth(v) {
+ // this.currentLineWidthr=col.value;range_input
+ this.currentLineWidth=v
+ 
+ console.log( "yaraaab"+this.currentLineWidth);
+  
+},
+
     async setUndoMode(value){
+      
       await this.GetShapesData("/"+value);
       this.clearCanvas();
       for(let i = 0 ; i < this.shapesData.length; i++ ){
+        console.log("hello");
         this.drawShapeProgrammatically(i)
       }
     },
@@ -169,7 +195,6 @@ export default {
       this.drawShapeEdit(e,this.currentId);
     },
     drawShapeEdit(e){
-
       this.selectedShape=this.currentShape.shapeType;
       const shape = this.currentShape;
       if(this.selectedShape==="circle")
@@ -217,7 +242,6 @@ export default {
       if(!Deleting){
        // console.log("ILOVEANIMALS")
         this.drawShapeProgrammatically(this.currentId)
-
       }
       DrawingCanvasMode = false
     },
@@ -263,10 +287,10 @@ export default {
         await this.GetShapesData("/shape");
       }
       drawn = false
-
     },
     setShapeAttributes(lineColor,fillColor,lineOpacity,fill){
       this.context.lineWidth = lineOpacity;
+      console.log("i hate uuu"+this.currentLineWidth)
       this.context.fillStyle = fillColor;
       this.fill = fill ;
       this.context.strokeStyle = lineColor;
@@ -299,22 +323,18 @@ export default {
           freeDrawing:freeDrawing.toString()
         }
       }
-
-
     },
     readDimension(shape = this.currentShape){
       console.log("YABENT")
       console.log(shape)
      console.log("I READ THE DIMENSIONS")
       if (shape.shapeType === "circle" || shape.shapeType === "ellipse") {
-
         this.radiusX = shape.jsondimensions.radiusX
         this.radiusY = shape.jsondimensions.radiusY
        this.setStartCoordinates(null,shape.jsondimensions.CenterX,shape.jsondimensions.CenterY)
       }
       else if (shape.shapeType === "pentagon" || shape.shapeType === "hexagon"
           || shape.shapeType === "triangle" ||shape.shapeType === "rectangle" || shape.shapeType === "line") {
-
         this.setStartCoordinates(null,shape.jsondimensions.start_X,shape.jsondimensions.start_Y)
         this.setEndCoordinates(null,shape.jsondimensions.end_X,shape.jsondimensions.end_Y)
         this.width = Math.abs(parseFloat(shape.jsondimensions.end_X)-parseFloat(shape.jsondimensions.start_X))
@@ -421,7 +441,6 @@ export default {
       else if(Resizing){
         this.setDimensions()
       }
-
       await axios.get(apiUrl+"/copymove",{params:{
           dimensions  : Dimension,
           id : this.currentId,
@@ -454,23 +473,20 @@ export default {
         this.context.lineTo(startX,startY)
          freeDrawing.push(startX,startY)
         this.context.stroke()
-
     },
     restoreSketch(){
       console.log("FREEE"+freeDrawing)
       this.context.beginPath();
       for (let i = 0; i < freeDrawing.length-1; i+=2) {
-
         this.setStartCoordinates(null,freeDrawing[i],freeDrawing[i+1])
         this.context.lineTo(startX,startY)
         this.context.stroke()
       }
       this.context.beginPath();
-
     },
     /* Polygons Drawing Methods*/
     drawTriangle(e) {
-      if(!drawing && !DrawingCanvasMode){return}
+      //if(!drawing && !DrawingCanvasMode){return}
       if(drawing){
         this.context.putImageData(imageData,0,0);
         this.setEndCoordinates(e);
@@ -481,11 +497,10 @@ export default {
       this.context.lineTo(X,Y);
       this.context.lineTo((X -base),Y);
       this.context.lineTo(startX,startY);
-      if(this.fill){
-        this.context.fill();
-      }
-      this.context.beginPath();
+      this.setShapeAttributes(this.currentColor,this.currentFillColor,this.currentLineWidth,true);
+       this.context.fill();
       this.context.stroke();
+      this.context.beginPath();
     },
     drawTriangleEdit(e , base,height ) {
       //if(!Selection){return}
@@ -498,15 +513,13 @@ export default {
       this.setEndCoordinates(e)
       this.height = height
       this.width = base/2 
-      if(this.fill){
-        this.context.fill();
-      }
-      this.setEndCoordinates(e);
-      this.context.beginPath();
+    this.setShapeAttributes(this.currentColor,this.currentFillColor,this.currentLineWidth,true);
+       this.context.fill();
       this.context.stroke();
+      this.context.beginPath();
     },
     drawPolygon(numberOfSides ,e){
-      if(!drawing && !DrawingCanvasMode){return}
+      if(drawing && DrawingCanvasMode){return}
       if(drawing){
         this.setEndCoordinates(e);
       }
@@ -521,25 +534,26 @@ export default {
         const curStep = i * step + shift;
         this.context.lineTo( X + this.radiusx * Math.cos(curStep) ,Y + this.radiusx * Math.sin(curStep));
       }
+        this.setShapeAttributes(this.currentColor,this.currentFillColor,this.currentLineWidth,true)
+       this.context.fill();
       this.context.stroke();
-      this.context.fill();
       this.context.beginPath();
+      
     },
     drawRect(e){
-      if(!drawing &&!DrawingCanvasMode)
-        return
+     // if(!drawing &&!DrawingCanvasMode){return}
       if(drawing){
         this.setEndCoordinates(e)
         this.context.putImageData(imageData,0,0)
       }
       if(!Resizing) drawn = !(X === startX && Y === startY);
-
       let width = X-startX
       let height = Y-startY
-      if(this.fill){
-        this.context.fill();
-      }
+      this.setShapeAttributes(this.currentColor,this.currentFillColor,this.currentLineWidth,true)
+      
+      this.context.fillRect(startX,startY,width,height)
       this.context.strokeRect(startX,startY,width,height)
+      
       this.context.beginPath();
     },
     drawRectEdit(e, width, height){
@@ -552,23 +566,24 @@ export default {
       // this.width = width
       // this.height = height
       this.setEndCoordinates(e)
-      this.context.strokeRect(X,Y,width,height);
+      this.setShapeAttributes(this.currentColor,this.currentFillColor,this.currentLineWidth,true)
+      
+      this.context.fillRect(startX,startY,width,height)
+      this.context.strokeRect(startX,startY,width,height)
+      
       this.context.beginPath();
     },
     drawLine(e){
-      if(!drawing &&!DrawingCanvasMode)
-        return
+      //if(!drawing &&!DrawingCanvasMode){return}
       if(drawing){
         this.setEndCoordinates(e)
         this.context.putImageData(imageData,0,0)
       }
       if(!Resizing) drawn = !(X === startX && Y === startY);
-
       this.context.moveTo(startX, startY);
       this.context.lineTo(X, Y);
-      if(this.fill){
-        this.context.fill();
-      }
+      this.setShapeAttributes(this.currentColor,this.currentFillColor,this.currentLineWidth,true)
+      this.context.fill();
       this.context.stroke();
       this.context.beginPath();
     },
@@ -581,11 +596,14 @@ export default {
       this.context.lineTo(e.offsetX+this.width, e.offsetY+this.height);
       //this.context.beginPath();
       this.setEndCoordinates(e)
+      this.setShapeAttributes(this.currentColor,this.currentFillColor,this.currentLineWidth,true)
+      this.context.fill();
       this.context.stroke();
+      this.context.beginPath();
     },
     /* Elliptical Shapes Drawing Methods */
     drawEllipse(e){
-      if(!drawing && !DrawingCanvasMode){return}
+      //if(!drawing && !DrawingCanvasMode){return}
       if(drawing){
         this.setEndCoordinates(e);
         this.radiusx = Math.abs(X-startX)/2
@@ -596,10 +614,9 @@ export default {
       }
       if(!Resizing) drawn = !(X === startX && Y === startY);
       this.context.ellipse(startX,startY,this.radiusx,this.radiusy,Math.PI , 0 ,2 * Math.PI);
-      this.context.stroke();
-      if(this.fill){
-        this.context.fill();
-      }
+       this.setShapeAttributes(this.currentColor,this.currentFillColor,this.currentLineWidth,true)
+       this.context.fill();
+       this.context.stroke();
       this.context.beginPath();
     },
     drawEllipseEdit(e , radiusX ,radiusY  ){
@@ -607,30 +624,26 @@ export default {
       this.setEndCoordinates(e);
       this.context.putImageData(imageData,0,0);
       this.context.ellipse(e.offsetX,e.offsetY,radiusX,radiusY,Math.PI , 0 ,2 * Math.PI);
-      this.context.stroke();
-      if(this.fill){
-        this.context.fill();
-      }
+     this.setShapeAttributes(this.currentColor,this.currentFillColor,this.currentLineWidth,true)
+       this.context.fill();
+       this.context.stroke();
       this.context.beginPath();
     },
     drawCircle(e) {
-
-      if(!drawing &&!DrawingCanvasMode)
-        return
+      //if(!drawing &&!DrawingCanvasMode){return}
+       
       if(drawing){
       //  console.log("HELLO SARSOURA")
-
         this.setEndCoordinates(e)
         this.context.putImageData(imageData,0,0)
         this.radiusx = Math.sqrt(Math.pow((X - startX), 2) + Math.pow((Y - startY), 2))
       }
       if(!Resizing) drawn = !(X === startX && Y === startY);
-
      // console.log("HELLO SARSOURA")
-
       this.context.arc(startX, startY, this.radiusx, 0, 2 * Math.PI)
+       this.setShapeAttributes(this.currentColor,this.currentFillColor,this.currentLineWidth,true);
+     this.context.fill();
       this.context.stroke()
-      if(this.fill) this.context.fill();
       this.context.beginPath()
     }	,
     drawCircleEdit(e , Radius  ) {
@@ -639,10 +652,10 @@ export default {
       this.context.putImageData(imageData,0,0)
       this.context.beginPath()
       this.context.arc(e.offsetX, e.offsetY, Radius, 0 , 2 * Math.PI)
-      if(this.fill){
-        this.context.fill();
-      }
+      this.setShapeAttributes(this.currentColor,this.currentFillColor,this.currentLineWidth,true);
+     this.context.fill();
       this.context.stroke()
+      this.context.beginPath()
     },
     // drawShapeProgrammatically(id){
     //   let shape = this.shapesData[id]
@@ -670,6 +683,10 @@ export default {
       }
       // console.log(shape.shapeType);
       let shapeType = shape.shapeType
+       this.currentFillColor=shape.jsonproperties.fillColor;
+      this.currentColor=shape.jsonproperties.Color;
+      this.currentLineWidth=shape.jsonproperties.lineWidth;
+      console.log(this.currentLineWidth)
       if(shapeType==="circle"||shapeType==="ellipse") {
         this.setStartCoordinates(null, shape.jsondimensions.CenterX, shape.jsondimensions.CenterY)
         this.radiusx = shape.jsondimensions.radiusX
