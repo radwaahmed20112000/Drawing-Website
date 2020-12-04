@@ -57,6 +57,7 @@ public class Shape implements IShape,Cloneable, Serializable {
     public void copy(String dimensions, long id) throws CloneNotSupportedException {
         Shape shape = (Shape) this.myCanvas.getShapes().get(id).clone();
         shape.setID(myCanvas.getCurrentID());
+        shape.setShapeState("created");
         myCanvas.setCurrentID();
         HashMap<String, String> dimension = this.fromJsonToMap(dimensions);
         shape.setJSONDimensions(dimension);
