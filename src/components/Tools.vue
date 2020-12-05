@@ -13,14 +13,7 @@
         <li>Save as JSON file</li>
       </ul>
     </div>
-    <div id="edit"><i class="fa fa-edit"></i> Edit
-      <ul id="editList">
-        <li>Undo</li>
-        <li>Redo</li>
-        <li>Copy</li>
-        <li>Paste</li>
-      </ul>
-    </div>
+    
   </div>
 </template>
 
