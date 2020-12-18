@@ -24,19 +24,11 @@ export default {
     //NAVIGATION BAR SETTINGS :
     var saveDrawing = document.getElementById("saveDrawing");
     var saveList = document.getElementById("saveList");
-    var edit = document.getElementById("edit");
-    var editList = document.getElementById("editList");
     saveDrawing.addEventListener('mouseover', () =>{
       saveList.style.display = "block";
     });
     saveDrawing.addEventListener('mouseout', () =>{
       saveList.style.display = "none";
-    });
-    edit.addEventListener('mouseover', () =>{
-      editList.style.display = "block";
-    });
-    edit.addEventListener('mouseout', () =>{
-      editList.style.display = "none";
     });
     //End Navigation Bar
   },
@@ -87,6 +79,7 @@ export default {
   margin-top: 5px;
 }
 #saveDrawing ul, #edit ul{
+  z-index: 999999999;
   position: absolute;
   list-style-type: none;
   background-color:rgba(0, 0, 0, 0.616) ;
