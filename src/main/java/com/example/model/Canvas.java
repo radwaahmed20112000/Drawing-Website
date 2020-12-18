@@ -2,7 +2,12 @@ package com.example.model;
 
 import com.example.model.Shapes.Shape;
 import com.example.model.Shapes.ShapeFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONException;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.HashMap;
 
 public class Canvas {
@@ -106,5 +111,49 @@ public class Canvas {
 
     }
 
+    public static boolean saveAsJSONFile(String path) {
+        try {
+            File file = new File(path);
+            if (!file.createNewFile()) {
+                return false;
+            }
+            System.out.println("THE SHAPEEES" + canvas.shapes.toString());
+            int length = canvas.shapes.keySet().size();
+            Long[] keys = canvas.shapes.keySet().toArray(new Long[length]);
+            Shape[] shapes = new Shape[keys.length];
+            for(int i =0; i< keys.length; i++)
+            {
+                System.out.println("CANVAAAAAS" + canvas.shapes.toString());
+                shapes[i] = canvas.shapes.get(keys[i]);
+            }
+            String json = new ObjectMapper().writeValueAsString(shapes);
+            System.out.println(json);
+            FileWriter writer = new FileWriter(path);
+            writer.write(json);
+            writer.flush();
+            writer.close();
+        }catch (IOException e) {
+            System.out.println("An error occurred. HIIIIIIIIIIIIIIIIIIIIIIIIII");
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
+    public static void uploadCanvas(String fileContent) throws JSONException {
+        System.out.println(fileContent);
+        ObjectMapper mapper = new ObjectMapper();
+        try {
+            // 1. convert JSON array to Array objects
+            Shape[] shapes = mapper.readValue(fileContent, Shape[].class);
+
+            System.out.println("JSON array to Array objects...");
+            for (Shape shape : shapes) {
+                System.out.println(shape);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

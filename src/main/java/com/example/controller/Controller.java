@@ -5,6 +5,7 @@ import com.example.model.Shapes.EllipticalShapes.EllipticalShapes;
 import com.example.model.Shapes.FreeDrawing.FreeDrawing;
 import com.example.model.Shapes.Polygons.Polygons;
 import com.example.model.Shapes.Shape;
+import org.json.JSONException;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
@@ -108,5 +109,24 @@ public class Controller {
         myCanvas.redoCanvas();
         return myCanvas.getShapes();
     }
+    @CrossOrigin
+    @PostMapping("/downloadJSON")
+    public String downloadJSON(@RequestBody String path){
+        if(Canvas.saveAsJSONFile(path)) return "Received";
+        return "Error Occurred";
+    }
 
+    @CrossOrigin
+    @PostMapping("/uploadFile")
+    @ResponseBody
+    public String uploadFile(@RequestBody String fileContent) throws JSONException {
+        Canvas.uploadCanvas(fileContent);
+        return "done";
+    }
+    @CrossOrigin
+    @RequestMapping("/getShapesMap")
+    public Map<Long, Shape> getShapesMap (){
+        System.out.println(myCanvas.getShapes().toString());
+        return myCanvas.getShapes();
+    }
 }
