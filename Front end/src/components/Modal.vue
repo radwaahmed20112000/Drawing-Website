@@ -3,7 +3,7 @@
         <div id="modalJSON">
             <form id="form1">
                 <h2>Download as JSON file</h2> <br>
-                <label >Enter the file path : </label>
+                <label for="label" >Enter the file path : </label>
                 <input type="text" class="text" id= "textJSON" value="x:/location/name.json"><br><br>
                 <button @click="downloadJSON" class="download" id="downloadJSON">Download</button>
                 <p id="validJSON">You should enter a valid file name and location.</p>
@@ -13,7 +13,7 @@
          <div id="modalXML">
             <form id="form2">
                 <h2>Download as XML file</h2> <br>
-                <label  >Enter the file path : </label>
+                <label for="label" >Enter the file path : </label>
                 <input type="text" class="text" id= "textXML" value="x:/location/name.xml"><br><br>
                 <button @click="downloadXML" class="download" id="downloadXML">Download</button>
                 <p id="validXML">You should enter a valid file name and location.</p>
@@ -23,7 +23,7 @@
         <div id="modalOpen">
             <form id="form3">
             <h2>Upload JSON or XML File</h2> <br>
-            <label  >Choose file : </label>
+            <label for="label" >Choose file : </label>
             <input type="file" accept=".json, .xml" id="inputFile">
             <button class = "cancel" id="cancelOpen">Cancel</button>
             </form>

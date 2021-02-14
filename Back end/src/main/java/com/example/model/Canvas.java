@@ -3,9 +3,14 @@ package com.example.model;
 import com.example.model.Shapes.Shape;
 import com.example.model.Shapes.ShapeFactory;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.apache.tomcat.util.json.JSONParser;
+import org.apache.tomcat.util.json.ParseException;
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -110,6 +115,17 @@ public class Canvas {
 
 
     }
+    public static void uploadCanvas(Shape[] myShapes) throws JSONException {
+        canvas.currentID=0;
+        canvas.shapes.clear();
+        canvas.myUndo.getUndo().clear();
+        canvas.myUndo.getRedo().clear();
+        for(int i=0; i<myShapes.length; i++)
+        {
+           canvas.drawShape(myShapes[i]);
+            System.out.println("HIIIIIIIII AYAY   " + canvas.shapes.toString());
+        }
+    }
 
     public static boolean saveAsJSONFile(String path) {
         try {
@@ -140,20 +156,6 @@ public class Canvas {
         return true;
     }
 
-    public static void uploadCanvas(String fileContent) throws JSONException {
-        System.out.println(fileContent);
-        ObjectMapper mapper = new ObjectMapper();
-        try {
-            // 1. convert JSON array to Array objects
-            Shape[] shapes = mapper.readValue(fileContent, Shape[].class);
 
-            System.out.println("JSON array to Array objects...");
-            for (Shape shape : shapes) {
-                System.out.println(shape);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-    }
 }

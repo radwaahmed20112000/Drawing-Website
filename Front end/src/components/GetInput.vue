@@ -3,7 +3,7 @@
         <input type ="number" id = "num_input"  max = "100" min = "0" value="100" @change="changeRange()">
         <button @click="rangeDisplay()" ><i class="material-icons">keyboard_arrow_down</i></button>
         <div id="ranger" class="div_ranger">
-            <input type="range" id ="range_input"  max = "100" min="0" value="100" @change="changeNumber()">
+            <input type="range" id ="range_input"  max = "100" min="0" value="100" @change="changeNumber();$emit('setwidth',lineValue)" >
         </div>
     </div>
 </template>
@@ -20,7 +20,8 @@ export default {
         return {
             num_id:this.numid,
             range_id:this.rangeid,
-            div_id:this.divid
+            div_id:this.divid,
+            lineValue:'',
         }
     },
     methods:{ 
@@ -44,12 +45,16 @@ export default {
         var num = document.getElementById(this.num_id),
             range = document.getElementById(this.range_id);
         range.value = num.value;
+         this.lineValue=range.value
+        console.log(this.lineValue)
         },
         changeNumber()
         {
         var num = document.getElementById(this.num_id),
             range = document.getElementById(this.range_id);
         num.value = range.value;
+        this.lineValue=num.value
+        console.log(this.lineValue)
         }
   },
   mounted() {

@@ -8,9 +8,8 @@
     <div id="open"><i class="fa fa-folder-open"></i> Open Drawing</div>
     <div id="saveDrawing"><i class="fa fa-save"></i> Save Drawing
       <ul id="saveList">
-        <li>Save as XMl file</li>
-        <li>Save as an image</li>
-        <li>Save as JSON file</li>
+        <li id="saveXML">Save as XMl file</li>
+        <li id="saveJSON">Save as JSON file</li>
       </ul>
     </div>
     
@@ -78,15 +77,15 @@ export default {
   font-family: 'Jasmina FY',serif;
   margin-top: 5px;
 }
-#saveDrawing ul, #edit ul{
-  z-index: 999999999;
+#saveDrawing ul{
   position: absolute;
   list-style-type: none;
   background-color:rgba(0, 0, 0, 0.616) ;
   margin-top: 5px;
   display: none;
+  z-index: 999999999999;
 }
-#saveDrawing ul li, #edit ul li {
+#saveDrawing ul li{
   margin-left: -40px;
   margin-bottom: 5px;
   height: 40px;
@@ -95,8 +94,15 @@ export default {
   padding-top: 10px;
   cursor: pointer;
 }
-#saveDrawing ul li:hover, #edit ul li:hover {
+#saveDrawing ul li:hover {
   background-color: #DE3163;
+}
+.btn {
+  background-color: black;
+}
+#saveDrawing ul a{
+  text-decoration: none;
+  color: white;
 }
 /*END NAVIGATION BAR STYLING*/
 </style>

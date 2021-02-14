@@ -1,11 +1,11 @@
 package com.example.controller;
 
 import com.example.model.Canvas;
-import com.example.model.Shapes.EllipticalShapes.EllipticalShapes;
-import com.example.model.Shapes.FreeDrawing.FreeDrawing;
-import com.example.model.Shapes.Polygons.Polygons;
+
 import com.example.model.Shapes.Shape;
 import org.json.JSONException;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.bind.annotation.*;
@@ -16,24 +16,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
-@Configuration
-class MyConfiguration {
-
-    @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurerAdapter() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/**");
-            }
-        };
-    }
-}
-
+@SpringBootApplication
 @RestController
 public class Controller {
+    public static void main(String[] args) {
+        SpringApplication.run(Controller.class, args);
+    }
+
     Canvas myCanvas = Canvas.getInstance();
     @CrossOrigin
     @PostMapping("/shape")
@@ -41,12 +34,6 @@ public class Controller {
         myCanvas.drawShape(shape);
         return shape;
     }
-//    @CrossOrigin
-//    @PostMapping("/sketch")
-//    public FreeDrawing sketch(@RequestBody FreeDrawing sketch) {
-//        myCanvas.drawShape(sketch);
-//        return sketch;
-//    }
 
     @CrossOrigin
     @RequestMapping("/copymove")
@@ -119,14 +106,26 @@ public class Controller {
     @CrossOrigin
     @PostMapping("/uploadFile")
     @ResponseBody
-    public String uploadFile(@RequestBody String fileContent) throws JSONException {
-        Canvas.uploadCanvas(fileContent);
+    public String uploadFile(@RequestBody Shape[] myShapes) throws JSONException {
+        for(int i=0; i<myShapes.length; i++)
+        {
+            System.out.println(myShapes[i].toString());
+        }
+        Canvas.uploadCanvas(myShapes);
         return "done";
     }
-    @CrossOrigin
-    @RequestMapping("/getShapesMap")
-    public Map<Long, Shape> getShapesMap (){
-        System.out.println(myCanvas.getShapes().toString());
-        return myCanvas.getShapes();
+
+}
+@Configuration
+class MyConfiguration {
+
+    @Bean
+    public WebMvcConfigurer corsConfigurer() {
+        return new WebMvcConfigurerAdapter() {
+            @Override
+            public void addCorsMappings(CorsRegistry registry) {
+                registry.addMapping("/**");
+            }
+        };
     }
 }

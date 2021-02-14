@@ -137,4 +137,18 @@ public class Shape implements IShape,Cloneable, Serializable {
         );
         return (HashMap<String, String>) retMap;
     }
+
+    @Override
+    public String toString() {
+        return "Shape{" +
+                "dimensions='" + dimensions + '\'' +
+                ", shapeType='" + shapeType + '\'' +
+                ", shapeState='" + shapeState + '\'' +
+                ", JSONDimensions=" + JSONDimensions.toString()+
+                ", JSONProperties=" + JSONProperties.toString() +
+                ", properties='" + properties + '\'' +
+                ", myCanvas=" + myCanvas +
+                ", ID=" + ID +
+                '}';
+    }
 }

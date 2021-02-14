@@ -1,6 +1,10 @@
 <template>
   <div id="app">
-    <Tools></Tools>
+   
+   <Tools></Tools>
+   
+  
+   
     <Canvas></Canvas>
 
   </div>
@@ -10,6 +14,8 @@
 import Tools from './components/Tools.vue';
 //import ShapeBar from './components/ShapeBar.vue';
 //import LineBar from './components/LineBar.vue';
+//import ColorBar from './components/ColorBar.vue';
+//import GetInput from './components/GetInput.vue';
 import Canvas from './components/Canvas.vue';
 // import toolsBar from './components/toolsBar.vue'
 export default {
@@ -18,7 +24,11 @@ export default {
     Canvas,
     //ShapeBar,
     //LineBar,
-    Tools,
+     Tools,
+   // ColorBar,
+    //GetInput,
+    
+   
   },
   data() {
     return{

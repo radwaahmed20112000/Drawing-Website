@@ -4,7 +4,6 @@ import com.example.model.Shapes.Polygons.*;
 
 public class ShapeFactory {
     public Shape createShape(Shape shape,long ID){
-        System.out.println(shape.getJSONDimensions());
         if(shape.shapeType.equalsIgnoreCase("RECTANGLE"))
             shape = new Rectangle(shape.JSONProperties,shape.JSONDimensions,shape.shapeType);
         else if(shape.shapeType.equalsIgnoreCase("CIRCLE"))
